@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Fuzzer Internals - Part 2: Software Vulnerability Fundamentals | Reodus</title>
+<meta property="og:title" content="Fuzzer Internals - Part 2: Software Vulnerability Fundamentals | Reodus" />
+<meta name="twitter:title" content="Fuzzer Internals - Part 2: Software Vulnerability Fundamentals | Reodus" />
+<meta itemprop="name" content="Fuzzer Internals - Part 2: Software Vulnerability Fundamentals | Reodus" />
+<meta name="application-name" content="Fuzzer Internals - Part 2: Software Vulnerability Fundamentals | Reodus" />
+<meta property="og:site_name" content="Reodus" />
+
+<meta name="description" content="Learn how to get into the programs">
+<meta itemprop="description" content="Learn how to get into the programs" />
+<meta property="og:description" content="Learn how to get into the programs" />
+<meta name="twitter:description" content="Learn how to get into the programs" />
+
+<meta property="og:locale" content="en-us" />
+<meta name="language" content="en-us" />
+
+
+
+  <meta itemprop="image" content="https://reodus.com/" />
+  <meta property="og:image" content="https://reodus.com/" />
+  <meta name="twitter:image" content="https://reodus.com/" />
+  <meta name="twitter:image:src" content="https://reodus.com/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-02-14T00:00:00Z />
+    <meta property="article:published_time" content=2024-02-14T00:00:00Z />
+
+    
+    <meta property="og:article:author" content="Reo" />
+    <meta property="article:author" content="Reo" />
+    <meta name="author" content="Reo" />
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Fuzzer Internals - Part 2: Software Vulnerability Fundamentals",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-02-14",
+        "description": "Learn how to get into the programs",
+        "wordCount":  1028 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-02-14",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Reodus"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.122.0">
+
+    
+
+    <link rel="canonical" href="https://reodus.com/posts/fuzzer-internals-part2/">
+    <link href="/style.min.d43bc6c79baa87f006efb2b92be952faeedeb1a3ab626c1d6abda52eae049355.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="https://reodus.com/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    </head>
+<body data-theme = "light" class="notransition">
+
+<script src="/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="https://reodus.com/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/pages/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/categories/">
+                        Categories
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Fuzzer Internals - Part 2: Software Vulnerability Fundamentals</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2024-02-14T00:00:00&#43;00:00" itemprop="datePublished"> Feb 14, 2024 </time>
+                </div>
+                
+            </header>
+            
+    
+    <details class="toc" ZgotmplZ>
+        <summary><b>Table of Contents</b></summary>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#understanding-vulnerability-analysis">Understanding Vulnerability Analysis</a></li>
+    <li><a href="#classifying-vulnerabilities">Classifying Vulnerabilities</a>
+      <ul>
+        <li><a href="#design-vulnerabilities">Design Vulnerabilities</a></li>
+        <li><a href="#implementation-vulnerabilities">Implementation Vulnerabilities</a>
+          <ul>
+            <li><a href="#memory-corruptions">Memory Corruptions</a></li>
+          </ul>
+        </li>
+        <li><a href="#operational-vulnerabilities">Operational Vulnerabilities</a></li>
+      </ul>
+    </li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+    </details>
+            <div class="page-content">
+                <p>Before getting into fuzzer internals, it’s necessary to understand the minimum concept of vulnerabilities and anything related to them. In this part, the fundamental concept is explained. I hope it will be useful for you.</p>
+<h2 id="understanding-vulnerability-analysis">Understanding Vulnerability Analysis</h2>
+<p>Vulnerability analysis is the process of identifying, assessing, and prioritizing the security weaknesses in a system. Vulnerability analysis is important for maintaining the confidentiality, integrity, and availability of the data and services that the system provides. It is a critical component of any comprehensive security strategy, as it allows organizations to proactively address potential threats before they can be exploited by malicious actors.</p>
+<h2 id="classifying-vulnerabilities">Classifying Vulnerabilities</h2>
+<p>A vulnerability class is a set of vulnerabilities that share the same and unique pattern and behavior in a software system. It’s quite possible for a single vulnerability to fall into multiple categories. This classification helps in understanding the nature of the vulnerability, devising appropriate mitigation strategies, and enhancing the overall security posture of the system. Generally, there are three types of vulnerabilities in a system:</p>
+<ul>
+<li>Design Vulnerabilities</li>
+<li>Implementation Vulnerabilities</li>
+<li>Operational Vulnerabilities</li>
+</ul>
+<h3 id="design-vulnerabilities">Design Vulnerabilities</h3>
+<p>A design vulnerability is a problem that occurs due to a fundamental mistake in the software’s design. In these vulnerabilities, the software isn’t secure because it does exactly what it was designed to do and not more. This means that the flaw isn’t due to a coding error or a specific implementation issue, but rather a problem with the overall architecture or design of the software.</p>
+<p>For example, if a software system is designed without proper security controls or fails to consider potential threat vectors, it may be vulnerable to attacks even if it functions as intended. This could include scenarios where sensitive data is not properly encrypted, or where user permissions are not adequately managed, allowing unauthorized access to certain functions.</p>
+<h3 id="implementation-vulnerabilities">Implementation Vulnerabilities</h3>
+<p>In an implementation vulnerability, the program’s code is doing what it should, but there’s a security problem in the way the operation is carried out. This could be due to a variety of reasons such as improper error handling, insecure use of system calls, or incorrect assumptions about the environment in which the application runs. These vulnerabilities often arise from a lack of understanding or consideration of the potential security implications of certain code behaviors. For instance, a developer might use a function that doesn’t properly sanitize user input, leading to a potential injection attack. Or, they might neglect to implement necessary access controls, allowing unauthorized users to perform sensitive operations.</p>
+<h4 id="memory-corruptions">Memory Corruptions</h4>
+<p>Memory corruption is a type of implementation vulnerability that occurs when a program mismanages its own memory, leading to unexpected behavior and security vulnerabilities. Think of your computer’s memory as a big filing cabinet. Sometimes, a program may try to access a part of the memory that it’s not supposed to, like reaching into someone else’s file. This can result in system crashes, security holes, and even hackers gaining control over the system. It’s like trying to find your favorite book in the library, but accidentally knocking over all the shelves in the process.</p>
+<p>Memory corruption in programs poses a significant risk as it not only endangers the availability of the software but also can open the door for attackers to access the desired program and the computer system.</p>
+<p><img src="memory-corruption-example.png" alt="Memory Corruption Example" title="Memory Corruption Example"></p>
+<p>Some common causes of memory corruption are:</p>
+<ul>
+<li>Buffer overflow: This occurs when a program writes more data to a buffer than it can hold, causing the excess data to overwrite adjacent memory locations.</li>
+<li>Use-after-free: This occurs when a program tries to access a memory location that has been freed or deallocated, resulting in undefined behavior or access violation.</li>
+<li>Double-free: This occurs when a program tries to free or deallocate a memory location that has already been freed or deallocated, causing heap corruption or memory leak.</li>
+</ul>
+<p>To prevent memory corruption, programmers should follow secure coding best practices, like:</p>
+<ul>
+<li>Using safe functions that check the boundaries of buffers and strings, such as strncpy, snprintf, fgets, etc.</li>
+<li>Avoiding the use of dangerous functions that do not check the boundaries of buffers and strings, such as strcpy, strcat, sprintf, gets, etc.</li>
+<li>Using dynamic memory allocation functions that return NULL on failure, such as malloc, calloc, realloc, etc.</li>
+<li>Checking the return value of dynamic memory allocation functions and handling the error cases properly.</li>
+<li>Freeing or deallocating the memory that has been allocated dynamically as soon as it is no longer needed.</li>
+<li>Setting pointers to NULL after freeing or deallocating the memory they point to.</li>
+<li>Initializing variables before using them or assigning them default values.</li>
+<li>Using static analysis tools or compilers that can detect potential memory errors or warnings at compile time.</li>
+<li>Using debugging tools or techniques that can detect memory errors or leaks at run time, such as valgrind, gdb, etc.</li>
+</ul>
+<h5 id="stack-based-buffer-overflow">Stack-Based Buffer Overflow</h5>
+<p>To gain a deeper understanding of memory corruption, let’s delve into a classic example: the buffer overflow vulnerability within the stack region of the process’s memory. Consider the following snippet of C code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">vuln_func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">gets</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Enter your name: &#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">vuln_func</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>This code includes two functions: <code>main</code> and <code>vuln_func</code>. The <code>vuln_func</code> is vulnerable because it uses the <code>gets</code> function, which does not enforce any boundary checks on the size of the memory buffer it writes into. When the <code>main</code> invokes <code>vuln_func</code>, the compiler must manage the return address for the execution flow. In other words, after a function completes its tasks, it should return to the previous function to continue execution. This return address is stored in the stack. As you guessed, if there is no boundary check, the return address can be rewritten with the desired address of the attacker.</p>
+<h3 id="operational-vulnerabilities">Operational Vulnerabilities</h3>
+<p>Unlike vulnerabilities in source code, these vulnerabilities arise from how the software interacts with its environment. They include problems related to software misconfigurations and challenges arising from automated and manual processes surrounding the system. For instance, consider a website that stores a critical file in a directory without any security configuration to prevent unauthorized access. This could allow anyone to view the file listed in their browser.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.amazon.com/Art-Software-Security-Assessment-Vulnerabilities/dp/0321444426">&ldquo;The Art of Software Security Assessment Vulnerabilities&rdquo;</a> - <a href="#classifying-vulnerabilities">Classifying Vulnerabilities</a></li>
+</ul>
+
+            </div>
+        </article><hr style="margin-top: 40px; margin-bottom: 40px;" />
+<div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "reodus" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/reodus" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://x.com/reodus" target="_blank" rel="noopener noreferrer me"
+    title="X">
+    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+</svg>
+</a>
+<a href="index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2024 Reo.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script src="https://reodus.com/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
+
+    
+
+</body>
+</html>

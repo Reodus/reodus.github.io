@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://reodus.com/categories/</loc>
+    <lastmod>2024-02-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/posts/fuzzer-internals-part3/</loc>
+    <lastmod>2024-02-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/categories/fuzzing/</loc>
+    <lastmod>2024-02-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/</loc>
+    <lastmod>2024-02-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/posts/</loc>
+    <lastmod>2024-02-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/categories/exploitation/</loc>
+    <lastmod>2024-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/posts/fuzzer-internals-part2/</loc>
+    <lastmod>2024-02-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/posts/fuzzer-internals-part1/</loc>
+    <lastmod>2024-01-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/pages/about/</loc>
+  </url><url>
+    <loc>https://reodus.com/pages/</loc>
+  </url><url>
+    <loc>https://reodus.com/tags/</loc>
+  </url>
+</urlset>

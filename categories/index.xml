@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Reodus</title>
+    <link>https://reodus.com/categories/</link>
+    <description>Recent content in Categories on Reodus</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 24 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://reodus.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fuzzing</title>
+      <link>https://reodus.com/categories/fuzzing/</link>
+      <pubDate>Sat, 24 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://reodus.com/categories/fuzzing/</guid>
+      
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Exploitation</title>
+      <link>https://reodus.com/categories/exploitation/</link>
+      <pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://reodus.com/categories/exploitation/</guid>
+      
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

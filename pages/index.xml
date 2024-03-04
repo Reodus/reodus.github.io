@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on Reodus</title>
+    <link>https://reodus.com/pages/</link>
+    <description>Recent content in Pages on Reodus</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://reodus.com/pages/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://reodus.com/pages/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://reodus.com/pages/about/</guid>
+      
+      <description>Who Am I Hello Friends. My name is reo. I&amp;rsquo;m a system security researcher who interested in low level concepts like OS internals, Digital design, Reverse Engineering, Binary Exploitation and Fuzzing.</description>
+      
+    </item>
+    
+  </channel>
+</rss>
