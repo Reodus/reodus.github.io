@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Memory Management on Reodus</title>
+    <link>https://reodus.com/categories/memory-management/</link>
+    <description>Recent content in Memory Management on Reodus</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 21 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://reodus.com/categories/memory-management/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Virtual memory and Paging concepts in x86-64 Architecture</title>
+      <link>https://reodus.com/posts/memory-management/</link>
+      <pubDate>Mon, 21 Oct 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://reodus.com/posts/memory-management/</guid>
+      
+      <description>Memory is a fundamental component of any computer system, serving as the storage location for data and program instructions needed for execution. Efficient memory management is crucial due to the limited availability of physical memory (RAM). One of the core responsibilities of the operating system kernel is to manage this memory allocation. This is achieved through interactions with the processor&amp;rsquo;s Memory Management Unit (MMU), which is responsible for translating virtual memory addresses into physical addresses.</description>
+      
+    </item>
+    
+  </channel>
+</rss>

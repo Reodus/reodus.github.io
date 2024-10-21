@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Virtual memory and Paging concepts in x86-64 Architecture | Reodus</title>
+<meta property="og:title" content="Virtual memory and Paging concepts in x86-64 Architecture | Reodus" />
+<meta name="twitter:title" content="Virtual memory and Paging concepts in x86-64 Architecture | Reodus" />
+<meta itemprop="name" content="Virtual memory and Paging concepts in x86-64 Architecture | Reodus" />
+<meta name="application-name" content="Virtual memory and Paging concepts in x86-64 Architecture | Reodus" />
+<meta property="og:site_name" content="Reodus" />
+
+<meta name="description" content="An Introduction to Virtual memory and Paging in the Intel Architecture">
+<meta itemprop="description" content="An Introduction to Virtual memory and Paging in the Intel Architecture" />
+<meta property="og:description" content="An Introduction to Virtual memory and Paging in the Intel Architecture" />
+<meta name="twitter:description" content="An Introduction to Virtual memory and Paging in the Intel Architecture" />
+
+<meta property="og:locale" content="en-us" />
+<meta name="language" content="en-us" />
+
+
+
+  <meta itemprop="image" content="https://reodus.com/" />
+  <meta property="og:image" content="https://reodus.com/" />
+  <meta name="twitter:image" content="https://reodus.com/" />
+  <meta name="twitter:image:src" content="https://reodus.com/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-10-21T00:00:00Z />
+    <meta property="article:published_time" content=2024-10-21T00:00:00Z />
+
+    
+    <meta property="og:article:author" content="Amir m. jahangirzad" />
+    <meta property="article:author" content="Amir m. jahangirzad" />
+    <meta name="author" content="Amir m. jahangirzad" />
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Virtual memory and Paging concepts in x86-64 Architecture",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-10-21",
+        "description": "An Introduction to Virtual memory and Paging in the Intel Architecture",
+        "wordCount":  1943 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-10-21",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Reodus"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.122.0">
+
+    
+
+    <link rel="canonical" href="https://reodus.com/posts/memory-management/">
+    <link href="/style.min.d43bc6c79baa87f006efb2b92be952faeedeb1a3ab626c1d6abda52eae049355.css" rel="stylesheet">
+    <link href="/code-highlight.min.9d9971b4b569835865e5617a058c37b759289ce4de19430938e8f1157f91ea05.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="https://reodus.com/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    </head>
+<body data-theme = "light" class="notransition">
+
+<script src="/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="https://reodus.com/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/pages/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/categories/">
+                        Categories
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Virtual memory and Paging concepts in x86-64 Architecture</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2024-10-21T00:00:00&#43;00:00" itemprop="datePublished"> Oct 21, 2024 </time>
+                </div>
+                
+            </header>
+            
+    
+    <details class="toc" ZgotmplZ>
+        <summary><b>Table of Contents</b></summary>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#virtual-memory">Virtual Memory</a></li>
+    <li><a href="#page-sizes-in-virtual-memory">Page Sizes in Virtual Memory</a></li>
+    <li><a href="#memory-page-states">Memory Page States</a></li>
+    <li><a href="#page-table-hierarchy-and-address-translation">Page Table Hierarchy and Address Translation</a>
+      <ul>
+        <li><a href="#example-translating-a-64-bit-virtual-address">Example: Translating a 64-bit Virtual Address</a></li>
+      </ul>
+    </li>
+    <li><a href="#control-registers-for-paging">Control Registers for Paging</a>
+      <ul>
+        <li><a href="#cr0-register">CR0 Register</a></li>
+        <li><a href="#cr2-register">CR2 Register</a></li>
+        <li><a href="#cr3-register">CR3 Register</a>
+          <ul>
+            <li><a href="#example-address-translation-workflow">Example: Address Translation Workflow</a></li>
+          </ul>
+        </li>
+        <li><a href="#cr4-register">CR4 Register</a></li>
+        <li><a href="#access-control-and-permissions">Access Control and Permissions</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </details>
+            <div class="page-content">
+                <p>Memory is a fundamental component of any computer system, serving as the storage location for data and program instructions needed for execution. Efficient memory management is crucial due to the limited availability of physical memory (RAM). One of the core responsibilities of the operating system kernel is to manage this memory allocation. This is achieved through interactions with the processor&rsquo;s <strong>Memory Management Unit (MMU)</strong>, which is responsible for translating virtual memory addresses into physical addresses.</p>
+<h2 id="virtual-memory">Virtual Memory</h2>
+<p><strong>Virtual memory</strong> is a technique employed by modern operating systems to extend the apparent amount of usable memory beyond the limits of physical RAM. It allows processes to operate as if they have access to a large, continuous block of memory. In reality, some of that memory may be stored on slower storage media, such as a hard disk, in an area called <strong>swap space</strong> or a <strong>paging file</strong>.</p>
+<p>Each process is assigned its own <strong>virtual address space</strong>, which is managed by the operating system. The <strong>MMU</strong> performs the translation of virtual addresses to physical addresses in RAM or on disk. This division of memory into manageable blocks called <strong>pages</strong> allows the operating system to dynamically manage the pages in use, determining which reside in RAM and which are temporarily moved to disk.</p>
+<p>This approach provides two main benefits:</p>
+<ol>
+<li><strong>Isolation</strong>: Each process operates within its own virtual address space, isolating it from other processes. This prevents one process from accessing or modifying the memory of another process unless explicitly permitted, enhancing security and stability.</li>
+<li><strong>Efficiency</strong>: The operating system loads only the parts of a process&rsquo;s memory that are actively being used into RAM, leaving less frequently used parts on disk. This optimizes the use of physical memory and ensures that more memory is available for other tasks.</li>
+</ol>
+<h2 id="page-sizes-in-virtual-memory">Page Sizes in Virtual Memory</h2>
+<p>Modern operating systems use different <strong>page sizes</strong> to balance performance and flexibility. The size of a page impacts how memory is allocated and managed. On <strong>Intel’s 64-bit architecture</strong>, for example, there are three common page sizes:</p>
+<ol>
+<li><strong>Standard/Small Pages (4 KB)</strong>: These pages offer fine-grained memory control and are ideal for systems that require frequent small allocations. However, managing a large number of small pages increases the overhead of maintaining page tables, as more entries are needed to map the memory.</li>
+<li><strong>Large Pages (2 MB)</strong>: Large pages reduce the number of entries in page tables, decreasing the overhead of memory management. They are typically used in high-performance applications such as databases or applications that require large contiguous memory blocks. The downside is that large pages are less flexible, potentially leading to wasted memory if only a small portion of the large page is used.</li>
+<li><strong>Huge Pages (1 GB)</strong>: These pages are designed for extremely memory-intensive applications, such as scientific computing or big data processing. Huge pages minimize page table lookups, improving performance in large memory environments. However, their size makes them impractical for most general-purpose applications.</li>
+</ol>
+<p>The choice of page size affects memory efficiency and system performance. The table below outlines the page sizes available for different architectures:</p>
+<table>
+<thead>
+<tr>
+<th>Architecture</th>
+<th>Small Pages</th>
+<th>Large Pages</th>
+<th>Huge Pages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x86-32</td>
+<td>4 KB</td>
+<td>2 MB</td>
+<td>1 GB</td>
+</tr>
+<tr>
+<td>x86-64</td>
+<td>4 KB</td>
+<td>2 MB</td>
+<td>1 GB</td>
+</tr>
+<tr>
+<td>ARM</td>
+<td>4 KB</td>
+<td>4 MB</td>
+<td>-</td>
+</tr>
+<tr>
+<td>ARM64</td>
+<td>4 KB</td>
+<td>2 MB</td>
+<td>512 MB</td>
+</tr>
+</tbody>
+</table>
+<h2 id="memory-page-states">Memory Page States</h2>
+<p>In addition to different sizes, memory pages can exist in various <strong>states</strong> within the system. These states determine how the pages are used and whether they are available for allocation:</p>
+<ol>
+<li><strong>Committed Pages</strong>: These pages are actively in use by a process and are backed by physical memory. When a process requests memory, the operating system allocates <strong>committed pages</strong> from available RAM or the paging file on disk.</li>
+<li><strong>Reserved Pages</strong>: These pages are reserved for potential future use but are not currently backed by physical memory. The operating system reserves the address space but only commits the memory when needed. Reserved pages cannot be used by other processes.</li>
+<li><strong>Free Pages</strong>: Free pages are neither committed nor reserved, meaning they are available for allocation. These pages are part of the available system memory and can be assigned to processes as needed.</li>
+</ol>
+<p>By managing these page states, the operating system ensures that memory is allocated efficiently, reusing and swapping pages between RAM and disk when necessary.</p>
+<h2 id="page-table-hierarchy-and-address-translation">Page Table Hierarchy and Address Translation</h2>
+<p>The <strong>Memory Management Unit (MMU)</strong> is responsible for converting virtual addresses into physical addresses. This process, known as <strong>address translation</strong>, is managed through a hierarchy of <strong>page tables</strong>. In <strong>Intel’s 64-bit architecture</strong>, this hierarchy consists of four levels, which allow efficient management of large address spaces while minimizing the overhead associated with maintaining page tables.</p>
+<ol>
+<li><strong>Page Map Level 4 (PML4)</strong>: The top-level page table contains <strong>512 entries</strong>, each of which points to a <strong>Page Directory Pointer Table (PDPT)</strong>.</li>
+<li><strong>Page Directory Pointer Table (PDPT)</strong>: Each entry in the PDPT points to a <strong>Page Directory Table (PDT)</strong>. Like the PML4, the PDPT contains 512 entries.</li>
+<li><strong>Page Directory Table (PDT)</strong>: The PDT contains entries that point to the <strong>Page Table (PT)</strong>. Again, the PDT has 512 entries.</li>
+<li><strong>Page Table (PT)</strong>: The final level of the hierarchy, the PT contains entries that map directly to <strong>physical memory addresses</strong>. Each entry corresponds to a <strong>4 KB page</strong>.</li>
+</ol>
+<p>The virtual address is divided into parts, with each part used to index into a different level of the page table hierarchy. For example, in a 64-bit system, the <strong>address translation</strong> process works as follows:</p>
+<ul>
+<li><strong>Bits 47-39</strong>: Used to index into the PML4.</li>
+<li><strong>Bits 38-30</strong>: Used to index into the PDPT.</li>
+<li><strong>Bits 29-21</strong>: Used to index into the PDT.</li>
+<li><strong>Bits 20-12</strong>: Used to index into the PT.</li>
+<li><strong>Bits 11-0</strong>: Represent the offset within the 4 KB page.</li>
+</ul>
+<p>This hierarchical structure efficiently manages large virtual memory spaces and reduces the complexity of maintaining large page tables.</p>
+<h3 id="example-translating-a-64-bit-virtual-address">Example: Translating a 64-bit Virtual Address</h3>
+<p>Consider a 64-bit virtual address like <code>0x00007FFFFFFFFFFF</code>. This address is divided into segments, with each segment used to index into a different level of the page table hierarchy. The breakdown is as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PML4</td>
+<td><code>000000000</code></td>
+<td>Index into the PML4 table</td>
+</tr>
+<tr>
+<td>PDPT</td>
+<td><code>111111111</code></td>
+<td>Index into the PDPT</td>
+</tr>
+<tr>
+<td>PDT</td>
+<td><code>111111111</code></td>
+<td>Index into the PDT</td>
+</tr>
+<tr>
+<td>PT</td>
+<td><code>111111111</code></td>
+<td>Index into the PT</td>
+</tr>
+<tr>
+<td>Offset</td>
+<td><code>111111111111</code></td>
+<td>Offset within the page</td>
+</tr>
+</tbody>
+</table>
+<p>This structure means that the processor uses these bits to navigate the multi-level page table hierarchy. The PML4 entry is used to locate the corresponding PDPT entry, and so on, until the final physical page is identified, and the <strong>offset</strong> is applied to access the specific data within the page.</p>
+<h2 id="control-registers-for-paging">Control Registers for Paging</h2>
+<p>Control registers are vital for managing memory paging and configuring the processor’s operating modes. On <strong>x86</strong> and <strong>x86-64</strong> architectures, four control registers (<strong>CR0</strong>, <strong>CR2</strong>, <strong>CR3</strong>, and <strong>CR4</strong>) are directly involved in paging and memory management.</p>
+<h3 id="cr0-register">CR0 Register</h3>
+<p>The <strong>CR0 register</strong> contains flags that control the overall operation of the processor, enabling or disabling various features such as paging, protection, and coprocessor functionality. Important bits related to paging include:</p>
+<ul>
+<li><strong>PG (Paging Enable - Bit 31)</strong>: Enables or disables paging. When set to <code>1</code>, virtual addresses are translated into physical addresses using the paging mechanism. If set to <code>0</code>, paging is disabled, and the system uses physical addresses directly.</li>
+<li><strong>PE (Protection Enable - Bit 0)</strong>: Controls whether the CPU operates in <strong>protected mode</strong> (<code>1</code>) or <strong>real mode</strong> (<code>0</code>). Paging is only available in protected mode.</li>
+<li><strong>WP (Write Protect - Bit 16)</strong>: When set, even code running in kernel mode must respect write-protection bits for pages, enhancing security.</li>
+<li><strong>AM (Alignment Mask - Bit 18)</strong>: If set, the CPU checks for unaligned memory accesses when paging is enabled and raises a fault for violations.</li>
+</ul>
+<h3 id="cr2-register">CR2 Register</h3>
+<p>The <strong>CR2 register</strong> holds the <strong>linear address</strong> that caused a <strong>page fault</strong>. When a page fault occurs, the processor automatically updates <strong>CR2</strong> with the offending address, allowing the operating system to determine the cause of the fault.</p>
+<ul>
+<li><strong>CR2 (Page Fault Linear Address)</strong>: This register stores the linear address that led to the page fault. The OS can use this information to either load the page from disk (in the case of demand paging) or handle access violations (such as trying to write to a read-only page).</li>
+</ul>
+<p>Example: When the CPU raises a <strong>page fault exception</strong> (interrupt 0x0E), the <strong>CR2 register</strong> is updated with the offending address, allowing the operating system to handle the fault by either loading the page or raising an error for the process.</p>
+<h3 id="cr3-register">CR3 Register</h3>
+<p>The <strong>CR3 register</strong> holds the <strong>physical address</strong> of the <strong>PML4</strong> (in 64-bit mode) or the <strong>Page Directory</strong> (in 32-bit mode). This register is essential for <strong>context switching</strong>, as it allows the CPU to switch between different processes, each with its own set of page tables.</p>
+<ul>
+<li><strong>Context Switching</strong>: When switching between processes, the OS updates <strong>CR3</strong> with the physical address of the new process&rsquo;s page tables, allowing the CPU to access the correct memory space for the active process.</li>
+<li><strong>Memory Isolation</strong>: <strong>CR3</strong> ensures that each process can only access its own memory pages unless explicitly permitted by the OS.</li>
+</ul>
+<h4 id="example-address-translation-workflow">Example: Address Translation Workflow</h4>
+<p>Given a virtual address like <code>0x00007FFFFFFFFFFF</code>, the translation process works as follows:</p>
+<ol>
+<li>The processor reads <strong>CR3</strong> to obtain the physical address of the <strong>PML4 table</strong>.</li>
+<li>Using <strong>bits 47-39</strong> of the virtual address, the processor locates the entry in the PML4 table.</li>
+<li>This entry points to the <strong>PDPT</strong>. The processor uses <strong>bits 38-30</strong> to index into the PDPT.</li>
+<li>The <strong>PDT</strong> entry is found using <strong>bits 29-21</strong>.</li>
+<li>The <strong>Page Table (PT)</strong> entry is located using <strong>bits 20-12</strong>.</li>
+<li>Finally, <strong>bits 11-0</strong> represent the <strong>offset</strong> within the physical page, allowing access to the specific data.</li>
+</ol>
+<h3 id="cr4-register">CR4 Register</h3>
+<p>The <strong>CR4 register</strong> enables or disables advanced processor features, many of which affect how paging works. Key bits in <strong>CR4</strong> related to paging include:</p>
+<ul>
+<li><strong>PAE (Physical Address Extension - Bit 5)</strong>: Enables <strong>36-bit physical addresses</strong>, allowing systems to use more than 4 GB of RAM in 32-bit mode. PAE also enables the <strong>NX (No-Execute)</strong> bit for additional security.</li>
+<li><strong>PSE (Page Size Extension - Bit 4)</strong>: Enables the use of <strong>4 MB pages</strong> instead of the standard 4 KB pages, reducing overhead in systems that require large memory allocations.</li>
+<li><strong>PGE (Page Global Enable - Bit 7)</strong>: Enables <strong>global pages</strong>, which stay in the Translation Lookaside Buffer (TLB) across context switches, improving performance for frequently accessed memory pages.</li>
+<li><strong>SMEP (Supervisor Mode Execution Prevention - Bit 20)</strong>: Prevents the kernel from executing user-mode code, protecting the system from certain types of attacks.</li>
+<li><strong>SMAP (Supervisor Mode Access Prevention - Bit 21)</strong>: Prevents the kernel from accessing user-mode memory, further isolating user-space processes from the kernel.</li>
+<li><strong>PCIDE (Process-Context Identifiers - Bit 17)</strong>: Improves <strong>context switching</strong> by allowing the processor to cache address translations for multiple processes, reducing the need to flush the TLB during each switch.</li>
+<li><strong>LA57 (5-Level Paging Enable - Bit 12)</strong>: Enables <strong>5-level paging</strong>, expanding the virtual address space up to 57 bits, useful for very large address spaces.</li>
+</ul>
+<h3 id="access-control-and-permissions">Access Control and Permissions</h3>
+<p>Each memory page has a set of <strong>permissions</strong> that dictate the allowed operations (e.g., read, write, execute). These permissions are critical for system security and stability. If a process tries to perform an unauthorized action, such as writing to a read-only page or executing code from a non-executable page, the system raises an <strong>Access Violation</strong> or <strong>Segmentation Fault</strong> exception.</p>
+<p>In Intel processors, these permissions are managed through <strong>control bits</strong> in the page tables:</p>
+<ul>
+<li><strong>R/W (Read/Write)</strong>: Specifies whether the page is writable or read-only.</li>
+<li><strong>U/S (User/Supervisor)</strong>: Controls whether the page can be accessed by user-mode applications or only by the kernel.</li>
+<li><strong>NX (Execute Disable)</strong>: Prevents code execution from the page.</li>
+</ul>
+<p>These permissions ensure that processes cannot access or modify memory they do not own, providing a key security layer in modern operating systems.</p>
+
+            </div>
+        </article><hr style="margin-top: 40px; margin-bottom: 40px;" />
+<div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "reodus" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/reodus" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://x.com/re0dus" target="_blank" rel="noopener noreferrer me"
+    title="X">
+    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+</svg>
+</a>
+<a href="index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2024 Reo.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script src="https://reodus.com/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
+
+    
+
+</body>
+</html>
