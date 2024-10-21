@@ -8,13 +8,13 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 21 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://reodus.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Virtual memory and Paging concepts in x86-64 Architecture</title>
+      <title>Memory Management - Part 1: Virtual memory and Paging concepts</title>
       <link>https://reodus.com/posts/memory-management/</link>
       <pubDate>Mon, 21 Oct 2024 00:00:00 +0000</pubDate>
       
       <guid>https://reodus.com/posts/memory-management/</guid>
       
-      <description>Memory is a fundamental component of any computer system, serving as the storage location for data and program instructions needed for execution. Efficient memory management is crucial due to the limited availability of physical memory (RAM). One of the core responsibilities of the operating system kernel is to manage this memory allocation. This is achieved through interactions with the processor&amp;rsquo;s Memory Management Unit (MMU), which is responsible for translating virtual memory addresses into physical addresses.</description>
+      <description>Memory is an important part of a computer system that is used to store data. The process of memory management is critical because there is a limited amount of memory available to a computer system. One of the most important parts in the kernel of an operating system is the memory management part. In this section, the kernel has the task of making the memory available to the executive units (like processes or threads) by effectively communicating with the memory management unit in the processor, or in other words, allocating the memory to them.</description>
       
     </item>
     

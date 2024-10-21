@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Virtual memory and Paging concepts in x86-64 Architecture | Reodus</title>
-<meta property="og:title" content="Virtual memory and Paging concepts in x86-64 Architecture | Reodus" />
-<meta name="twitter:title" content="Virtual memory and Paging concepts in x86-64 Architecture | Reodus" />
-<meta itemprop="name" content="Virtual memory and Paging concepts in x86-64 Architecture | Reodus" />
-<meta name="application-name" content="Virtual memory and Paging concepts in x86-64 Architecture | Reodus" />
+<title itemprop="name">Memory Management - Part 1: Virtual memory and Paging concepts | Reodus</title>
+<meta property="og:title" content="Memory Management - Part 1: Virtual memory and Paging concepts | Reodus" />
+<meta name="twitter:title" content="Memory Management - Part 1: Virtual memory and Paging concepts | Reodus" />
+<meta itemprop="name" content="Memory Management - Part 1: Virtual memory and Paging concepts | Reodus" />
+<meta name="application-name" content="Memory Management - Part 1: Virtual memory and Paging concepts | Reodus" />
 <meta property="og:site_name" content="Reodus" />
 
 <meta name="description" content="An Introduction to Virtual memory and Paging in the Intel Architecture">
@@ -49,14 +49,14 @@
     {
         "@context": "http://schema.org",
         "@type": "Article",
-        "headline": "Virtual memory and Paging concepts in x86-64 Architecture",
+        "headline": "Memory Management - Part 1: Virtual memory and Paging concepts",
         "author": {
         "@type": "Person",
         "name": ""
         },
         "datePublished": "2024-10-21",
         "description": "An Introduction to Virtual memory and Paging in the Intel Architecture",
-        "wordCount":  1943 ,
+        "wordCount":  3069 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-10-21",
         "image": {
@@ -174,7 +174,7 @@ stroke-linejoin="round" class="feather feather-home">
     <main class="page-content" aria-label="Content">
         <article>
             <header class="header">
-                <h1 class="header-title">Virtual memory and Paging concepts in x86-64 Architecture</h1>
+                <h1 class="header-title">Memory Management - Part 1: Virtual memory and Paging concepts</h1>
                 
                 
                 <div class="post-meta">
@@ -191,8 +191,27 @@ stroke-linejoin="round" class="feather feather-home">
     <li><a href="#virtual-memory">Virtual Memory</a></li>
     <li><a href="#page-sizes-in-virtual-memory">Page Sizes in Virtual Memory</a></li>
     <li><a href="#memory-page-states">Memory Page States</a></li>
+    <li><a href="#page-guard">Page Guard</a>
+      <ul>
+        <li><a href="#stack-management-and-page-guard">Stack Management and Page Guard</a></li>
+        <li><a href="#windows-vmmap-example">Windows VMMap Example</a></li>
+      </ul>
+    </li>
     <li><a href="#page-table-hierarchy-and-address-translation">Page Table Hierarchy and Address Translation</a>
       <ul>
+        <li><a href="#whats-the-use-of-page-levels">What&rsquo;s the use of page levels?</a></li>
+      </ul>
+    </li>
+    <li><a href="#page-levels-in-the-intel-x86-64-architecture">Page Levels in the Intel x86-64 Architecture</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#pml4">PML4</a></li>
+            <li><a href="#pdpt">PDPT</a></li>
+            <li><a href="#pdt">PDT</a></li>
+            <li><a href="#pt">PT</a></li>
+          </ul>
+        </li>
         <li><a href="#example-translating-a-64-bit-virtual-address">Example: Translating a 64-bit Virtual Address</a></li>
       </ul>
     </li>
@@ -200,36 +219,56 @@ stroke-linejoin="round" class="feather feather-home">
       <ul>
         <li><a href="#cr0-register">CR0 Register</a></li>
         <li><a href="#cr2-register">CR2 Register</a></li>
-        <li><a href="#cr3-register">CR3 Register</a>
+        <li><a href="#cr3-register">CR3 Register</a></li>
+        <li><a href="#cr4-register">CR4 Register</a></li>
+      </ul>
+    </li>
+    <li><a href="#example-examining-virtual-and-physical-memory-using-windbg">Example: Examining virtual and physical memory using Windbg</a>
+      <ul>
+        <li>
           <ul>
-            <li><a href="#example-address-translation-workflow">Example: Address Translation Workflow</a></li>
+            <li><a href="#step-1-get-the-list-of-processes">Step 1: Get the List of Processes</a></li>
+            <li><a href="#step-2-change-context-to-a-specific-process">Step 2: Change Context to a Specific Process</a></li>
+            <li><a href="#step-3-find-virtual-address-descriptors-vad">Step 3: Find Virtual Address Descriptors (VAD)</a></li>
+            <li><a href="#step-4-retrieve-page-table-entry-pte">Step 4: Retrieve Page Table Entry (PTE)</a></li>
+            <li><a href="#step-5-determine-plm4-and-cr3-values">Step 5: Determine PLM4 and CR3 Values</a></li>
+            <li><a href="#step-6-convert-virtual-address-to-physical-address">Step 6: Convert Virtual Address to Physical Address</a></li>
+            <li><a href="#step-7-verify-using-physical-and-virtual-dump-commands">Step 7: Verify Using Physical and Virtual Dump Commands</a></li>
           </ul>
         </li>
-        <li><a href="#cr4-register">CR4 Register</a></li>
-        <li><a href="#access-control-and-permissions">Access Control and Permissions</a></li>
       </ul>
     </li>
   </ul>
 </nav>
     </details>
             <div class="page-content">
-                <p>Memory is a fundamental component of any computer system, serving as the storage location for data and program instructions needed for execution. Efficient memory management is crucial due to the limited availability of physical memory (RAM). One of the core responsibilities of the operating system kernel is to manage this memory allocation. This is achieved through interactions with the processor&rsquo;s <strong>Memory Management Unit (MMU)</strong>, which is responsible for translating virtual memory addresses into physical addresses.</p>
+                <p>Memory is an important part of a computer system that is used to store data. The process of memory management is critical because there is a limited amount of memory available to a computer system. One of the most important parts in the kernel of an operating system is the memory management part. In this section, the kernel has the task of making the memory available to the executive units (like processes or threads) by effectively communicating with the <strong>memory management unit</strong> in the processor, or in other words, allocating the memory to them.</p>
 <h2 id="virtual-memory">Virtual Memory</h2>
-<p><strong>Virtual memory</strong> is a technique employed by modern operating systems to extend the apparent amount of usable memory beyond the limits of physical RAM. It allows processes to operate as if they have access to a large, continuous block of memory. In reality, some of that memory may be stored on slower storage media, such as a hard disk, in an area called <strong>swap space</strong> or a <strong>paging file</strong>.</p>
-<p>Each process is assigned its own <strong>virtual address space</strong>, which is managed by the operating system. The <strong>MMU</strong> performs the translation of virtual addresses to physical addresses in RAM or on disk. This division of memory into manageable blocks called <strong>pages</strong> allows the operating system to dynamically manage the pages in use, determining which reside in RAM and which are temporarily moved to disk.</p>
-<p>This approach provides two main benefits:</p>
+<p>Virtual memory is one of the memory management techniques in the operating system. Using this technique for memory management in operating systems makes the processes have the illusion that they have a very large space of memory at their disposal, when the main memory space can be much more limited. In this model, the operating system divides the virtual memory into smaller pieces called pages. The reason for this segmentation is to simplify the process of accessing different memory locations. Each of these pages can be considered equivalent to a location in main memory or peripheral memory. This means that some memory pages of a process can be stored in RAM while others can be stored on disk. Figure 1 shows an abstract of this topic.</p>
+<table>
+<thead>
+<tr>
+<th><center> <img src="MemoryPages.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 1: Abstraction of process pages and their mapped locations in main memory and secondary memory</b></center></td>
+</tr>
+</tbody>
+</table>
+<p>This approach offers two main benefits:</p>
 <ol>
 <li><strong>Isolation</strong>: Each process operates within its own virtual address space, isolating it from other processes. This prevents one process from accessing or modifying the memory of another process unless explicitly permitted, enhancing security and stability.</li>
 <li><strong>Efficiency</strong>: The operating system loads only the parts of a process&rsquo;s memory that are actively being used into RAM, leaving less frequently used parts on disk. This optimizes the use of physical memory and ensures that more memory is available for other tasks.</li>
 </ol>
 <h2 id="page-sizes-in-virtual-memory">Page Sizes in Virtual Memory</h2>
-<p>Modern operating systems use different <strong>page sizes</strong> to balance performance and flexibility. The size of a page impacts how memory is allocated and managed. On <strong>Intel’s 64-bit architecture</strong>, for example, there are three common page sizes:</p>
+<p>Modern operating systems use different <strong>page sizes</strong> to balance performance and flexibility. The size of a page impacts how memory is allocated and managed. For example, There are three common page sizes on <strong>Intel’s 64-bit architecture</strong>,</p>
 <ol>
-<li><strong>Standard/Small Pages (4 KB)</strong>: These pages offer fine-grained memory control and are ideal for systems that require frequent small allocations. However, managing a large number of small pages increases the overhead of maintaining page tables, as more entries are needed to map the memory.</li>
-<li><strong>Large Pages (2 MB)</strong>: Large pages reduce the number of entries in page tables, decreasing the overhead of memory management. They are typically used in high-performance applications such as databases or applications that require large contiguous memory blocks. The downside is that large pages are less flexible, potentially leading to wasted memory if only a small portion of the large page is used.</li>
-<li><strong>Huge Pages (1 GB)</strong>: These pages are designed for extremely memory-intensive applications, such as scientific computing or big data processing. Huge pages minimize page table lookups, improving performance in large memory environments. However, their size makes them impractical for most general-purpose applications.</li>
+<li><strong>Standard/Small Pages (4 KB)</strong>: In Intel&rsquo;s 64-bit architecture, the size of these pages is 4 kilobytes. These types of pages are most commonly used in virtual memory systems and are used as the basic unit of pages for most processes. The small size of these pages allows the operating system to manage memory accurately and optimally. Using this type of pages for programs that require a large amount of memory reduces system efficiency.</li>
+<li><strong>Large Pages (2 MB)</strong>: The size of these pages is 2 MB. These pages are usually suitable for programs that need to access large chunks of memory. Due to the larger size, fewer page tables are used for mapping, which reduces the operating system&rsquo;s memory management burden. However, it should be noted that using larger pages reduces the flexibility of the operating system in memory management, because smaller parts of memory cannot be controlled accurately.</li>
+<li><strong>Huge Pages (1 GB)</strong>: the size of these pages is equal to 1 GB. Very large pages are used for applications that require access to very large volumes of data and are typically used in server systems or high-performance computing environments. By using huge pages, the need for a large number of page tables is eliminated, which reduces the operating system&rsquo;s burden of memory management. Hence, it is suitable for extremely large applications such as very large databases, virtual machine disks and big data analysis. Also, for the same reason as the previous type, these pages are not flexible and are used only in special cases. The table below shows the size of pages in different architectures.</li>
 </ol>
-<p>The choice of page size affects memory efficiency and system performance. The table below outlines the page sizes available for different architectures:</p>
 <table>
 <thead>
 <tr>
@@ -269,20 +308,77 @@ stroke-linejoin="round" class="feather feather-home">
 <h2 id="memory-page-states">Memory Page States</h2>
 <p>In addition to different sizes, memory pages can exist in various <strong>states</strong> within the system. These states determine how the pages are used and whether they are available for allocation:</p>
 <ol>
-<li><strong>Committed Pages</strong>: These pages are actively in use by a process and are backed by physical memory. When a process requests memory, the operating system allocates <strong>committed pages</strong> from available RAM or the paging file on disk.</li>
-<li><strong>Reserved Pages</strong>: These pages are reserved for potential future use but are not currently backed by physical memory. The operating system reserves the address space but only commits the memory when needed. Reserved pages cannot be used by other processes.</li>
-<li><strong>Free Pages</strong>: Free pages are neither committed nor reserved, meaning they are available for allocation. These pages are part of the available system memory and can be assigned to processes as needed.</li>
+<li><strong>Committed Pages</strong>: The Committed virtual memory pages are pages that are mapped to a frame in physical memory. These pages are available for use by the application and data is stored and processed in it. When an executive unit requests memory from the kernel, the operating system commits the memory for those pages so that the executive unit can use those pages to store and reuse its data.</li>
+<li><strong>Reserved Pages</strong>: The Reserved pages occupy part of the virtual address space, but are not yet mapped to physical memory or paging space. These pages are reserved for future use, but are not committed until the application asks the operating system to use them. This helps to keep the address space available to the application without using physical memory unnecessarily. If the program uses these pages without requesting them to be committed, the operating system will close the process by sending a page fault exception error.</li>
+<li><strong>Free Pages</strong>: The Free pages are actually free and are not assigned to any process. These pages are available to be allocated to applications by the operating system as needed. When an application requests memory, free pages can be reserved first and then committed as needed. As with the previous type, any access to these pages without reservation and commit requests will result in memory page fault.</li>
 </ol>
 <p>By managing these page states, the operating system ensures that memory is allocated efficiently, reusing and swapping pages between RAM and disk when necessary.</p>
+<h2 id="page-guard">Page Guard</h2>
+<p>Page guard is a memory protection mechanism designed to prevent unauthorized or unexpected access to specific areas of memory. It works by marking certain memory pages as guarded, meaning that any access attempts to those pages will trigger an exception, such as a page fault. This is particularly useful in scenarios where access to memory needs to be controlled tightly for both security and stability reasons.</p>
+<h3 id="stack-management-and-page-guard">Stack Management and Page Guard</h3>
+<p>A common use case of page guard is for stack segments. In a multi-threaded process, each thread has its own stack pages, and these pages are stored in a segment of memory allocated specifically for stack usage. Without a page guard mechanism, a thread that overflows its stack could overwrite memory used by other threads or processes, potentially causing serious errors or security vulnerabilities. By enabling the page guard mechanism, when a thread attempts to write beyond its allocated stack, a page fault exception is generated, and the operating system can take appropriate action to prevent the overflow from corrupting adjacent memory.</p>
+<p>This protection mechanism is crucial in virtual memory systems because it ensures that critical sections of memory (like stack segments) are protected from accidental overwriting. In the absence of such a mechanism, a stack overflow could lead to data corruption or even system crashes.</p>
+<h3 id="windows-vmmap-example">Windows VMMap Example</h3>
+<p>Figure 2 in the article shows a screenshot from VMMap, a tool for visualizing memory usage on Windows. It highlights how page guard is employed within the memory map of a running process, demonstrating how guarded pages are visually distinct from other types of memory. The <strong>key advantage</strong> of the page guard is its ability to catch buffer overflows and other forms of unauthorized memory access, which is essential in preventing vulnerabilities and maintaining system stability.</p>
+<table>
+<thead>
+<tr>
+<th><center> <img src="PageGuard-VMMAP.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 2: Display of pages and page guard mechanism in VMMAP software of Windows operating system</b></center></td>
+</tr>
+</tbody>
+</table>
 <h2 id="page-table-hierarchy-and-address-translation">Page Table Hierarchy and Address Translation</h2>
-<p>The <strong>Memory Management Unit (MMU)</strong> is responsible for converting virtual addresses into physical addresses. This process, known as <strong>address translation</strong>, is managed through a hierarchy of <strong>page tables</strong>. In <strong>Intel’s 64-bit architecture</strong>, this hierarchy consists of four levels, which allow efficient management of large address spaces while minimizing the overhead associated with maintaining page tables.</p>
+<p>In general, in virtual memory technique, there are two types of addressing methods called <strong>virtual/logical address</strong> and <strong>physical address</strong>. The virtual address belongs to the virtual space of the memory that is dedicated to the processes, and the physical address is the exact location of the desired data in the physical memory. Although the process of allocating memory, creating and managing pages is the responsibility of the operating system, the task of translating the virtual address to the physical address is the responsibility of a hardware part called <strong>Memory Management Unit (MMU)</strong>. The work of this hardware is address translation, access control and cache control. In the address translation section, the operating system can access the location of the physical address by giving the virtual address to the MMU and can perform its desired actions. Figure 3 shows the form in which the MMU is considered a separate hardware unit and the processor uses it to access the memory.</p>
+<table>
+<thead>
+<tr>
+<th><img src="MMU.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 3: Abstraction of an old architecture for communication between MMU and addresses </b></center></td>
+</tr>
+</tbody>
+</table>
+<p>In the x86-64 architecture, while the virtual address is theoretically 64-bits, only the lower 48 bits are used bacause of limitations in current implementations. This means that 256 TB of virtual memory is addressable and accessible (That&rsquo;s why there&rsquo;s a free gap between user-space and kernel-space). The virtual address is translated in 5 different levels in the page tables, but the Windows operating system supports only 4 levels, which we will examine only those four levels below.</p>
+<h3 id="whats-the-use-of-page-levels">What&rsquo;s the use of page levels?</h3>
+<p>Systems with a large address space, such as x86-64, need solutions to manage all virtual memory space optimally. Dividing this space into different levels means that large parts of the memory that are not used do not need to be mapped directly and only a part of the addressing space is managed dynamically.</p>
+<h2 id="page-levels-in-the-intel-x86-64-architecture">Page Levels in the Intel x86-64 Architecture</h2>
+<p>As mentioned, 4 different levels for memory pages in the Windows operating system can be considered, which are:</p>
 <ol>
-<li><strong>Page Map Level 4 (PML4)</strong>: The top-level page table contains <strong>512 entries</strong>, each of which points to a <strong>Page Directory Pointer Table (PDPT)</strong>.</li>
-<li><strong>Page Directory Pointer Table (PDPT)</strong>: Each entry in the PDPT points to a <strong>Page Directory Table (PDT)</strong>. Like the PML4, the PDPT contains 512 entries.</li>
-<li><strong>Page Directory Table (PDT)</strong>: The PDT contains entries that point to the <strong>Page Table (PT)</strong>. Again, the PDT has 512 entries.</li>
-<li><strong>Page Table (PT)</strong>: The final level of the hierarchy, the PT contains entries that map directly to <strong>physical memory addresses</strong>. Each entry corresponds to a <strong>4 KB page</strong>.</li>
+<li><strong>Page Map Level 4 (PML4)</strong></li>
+<li><strong>Page Directory Pointer Table (PDPT)</strong></li>
+<li><strong>Page Directory Table (PDT)</strong></li>
+<li><strong>Page Table (PT)</strong></li>
 </ol>
-<p>The virtual address is divided into parts, with each part used to index into a different level of the page table hierarchy. For example, in a 64-bit system, the <strong>address translation</strong> process works as follows:</p>
+<h4 id="pml4">PML4</h4>
+<p>This table is the first level of page table of x86-64 systems, which has 512 entries and each entry can point to a PDP table on the second level. In fact, PML4 manages the overall map of access to larger parts of memory. The main use of this level is to divide a very large address space into smaller parts, and there is no need for the operating system to manage the entire space directly. Each entry in PML4 covers about 512 GB of virtual address space.</p>
+<h4 id="pdpt">PDPT</h4>
+<p>PDPT is the second level of the page table and each entry from this level points to a PD table. The PDP table also has 512 entries and each entry can manage 1 GB of virtual space. If Huge pages are used, this level can directly point to physical addresses without the need for lower levels, and in this case, each entry in the PDP table can handle a 1 GB page.</p>
+<h4 id="pdt">PDT</h4>
+<p>The third level of the PDT page table has 512 entries like the previous levels. Each entry in the PD table can handle 2 MB of virtual addressing space. Also, each entry points to a PT. If large 2MB pages are used, the PD table can point directly to physical addresses and there is no need for a PT level. In this case, the translation process becomes faster and simpler because fewer levels are required for translation.</p>
+<h4 id="pt">PT</h4>
+<p>This level is the last level of the page table where each entry points to a 4 KB page of physical memory. PT also has 512 entries, and each entry points to a 4KB physical frame. This hierarchical structure efficiently manages large virtual memory spaces and reduces the complexity of maintaining large page tables.</p>
+<table>
+<thead>
+<tr>
+<th><img src="Paging-Levels.png" alt=""></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 4: Paging Levels from AMD Architecture programmer&rsquo;s manual, volume 2</b></center></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>The virtual address is divided into 5 parts and each part is used to index into a different level of the page table hierarchy. For example, in x86-64 systems, the <strong>address translation</strong> process in paging level works as follows:</p>
 <ul>
 <li><strong>Bits 47-39</strong>: Used to index into the PML4.</li>
 <li><strong>Bits 38-30</strong>: Used to index into the PDPT.</li>
@@ -290,14 +386,13 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>Bits 20-12</strong>: Used to index into the PT.</li>
 <li><strong>Bits 11-0</strong>: Represent the offset within the 4 KB page.</li>
 </ul>
-<p>This hierarchical structure efficiently manages large virtual memory spaces and reduces the complexity of maintaining large page tables.</p>
 <h3 id="example-translating-a-64-bit-virtual-address">Example: Translating a 64-bit Virtual Address</h3>
 <p>Consider a 64-bit virtual address like <code>0x00007FFFFFFFFFFF</code>. This address is divided into segments, with each segment used to index into a different level of the page table hierarchy. The breakdown is as follows:</p>
 <table>
 <thead>
 <tr>
 <th>Segment</th>
-<th>Value</th>
+<th>Binary Value</th>
 <th>Purpose</th>
 </tr>
 </thead>
@@ -331,57 +426,137 @@ stroke-linejoin="round" class="feather feather-home">
 </table>
 <p>This structure means that the processor uses these bits to navigate the multi-level page table hierarchy. The PML4 entry is used to locate the corresponding PDPT entry, and so on, until the final physical page is identified, and the <strong>offset</strong> is applied to access the specific data within the page.</p>
 <h2 id="control-registers-for-paging">Control Registers for Paging</h2>
-<p>Control registers are vital for managing memory paging and configuring the processor’s operating modes. On <strong>x86</strong> and <strong>x86-64</strong> architectures, four control registers (<strong>CR0</strong>, <strong>CR2</strong>, <strong>CR3</strong>, and <strong>CR4</strong>) are directly involved in paging and memory management.</p>
+<p>On x86 and x86-64 architectures, control registers (specifically CR0, CR2, CR3, and CR4) play a crucial role in managing the paging system and overall memory management. These registers are used to configure how the processor handles virtual memory, paging, and other essential tasks related to memory protection and execution.</p>
 <h3 id="cr0-register">CR0 Register</h3>
-<p>The <strong>CR0 register</strong> contains flags that control the overall operation of the processor, enabling or disabling various features such as paging, protection, and coprocessor functionality. Important bits related to paging include:</p>
+<p>The CR0 register controls several critical operating modes of the CPU, including enabling and disabling paging. Its relevant flags include:</p>
 <ul>
-<li><strong>PG (Paging Enable - Bit 31)</strong>: Enables or disables paging. When set to <code>1</code>, virtual addresses are translated into physical addresses using the paging mechanism. If set to <code>0</code>, paging is disabled, and the system uses physical addresses directly.</li>
-<li><strong>PE (Protection Enable - Bit 0)</strong>: Controls whether the CPU operates in <strong>protected mode</strong> (<code>1</code>) or <strong>real mode</strong> (<code>0</code>). Paging is only available in protected mode.</li>
-<li><strong>WP (Write Protect - Bit 16)</strong>: When set, even code running in kernel mode must respect write-protection bits for pages, enhancing security.</li>
-<li><strong>AM (Alignment Mask - Bit 18)</strong>: If set, the CPU checks for unaligned memory accesses when paging is enabled and raises a fault for violations.</li>
+<li>PG (Paging Enable): This flag controls whether paging is enabled or disabled. When set, the processor translates virtual addresses into physical addresses using the page tables.</li>
+<li>PE (Protection Enable): This flag, when set, enables protected mode, which allows for the use of paging and access control based on privilege levels.</li>
+<li>WP (Write Protect): This flag, when set, prevents supervisor-level code from writing to user-mode pages, providing an additional layer of memory protection.</li>
 </ul>
 <h3 id="cr2-register">CR2 Register</h3>
-<p>The <strong>CR2 register</strong> holds the <strong>linear address</strong> that caused a <strong>page fault</strong>. When a page fault occurs, the processor automatically updates <strong>CR2</strong> with the offending address, allowing the operating system to determine the cause of the fault.</p>
-<ul>
-<li><strong>CR2 (Page Fault Linear Address)</strong>: This register stores the linear address that led to the page fault. The OS can use this information to either load the page from disk (in the case of demand paging) or handle access violations (such as trying to write to a read-only page).</li>
-</ul>
-<p>Example: When the CPU raises a <strong>page fault exception</strong> (interrupt 0x0E), the <strong>CR2 register</strong> is updated with the offending address, allowing the operating system to handle the fault by either loading the page or raising an error for the process.</p>
+<p>The CR2 register holds the faulting address in the event of a page fault. When a page fault occurs (such as when a process tries to access a non-committed or non-existent page), the memory address that caused the fault is stored in CR2, allowing the operating system to handle the exception properly and decide how to proceed (e.g., by loading the page from disk or terminating the process).</p>
 <h3 id="cr3-register">CR3 Register</h3>
-<p>The <strong>CR3 register</strong> holds the <strong>physical address</strong> of the <strong>PML4</strong> (in 64-bit mode) or the <strong>Page Directory</strong> (in 32-bit mode). This register is essential for <strong>context switching</strong>, as it allows the CPU to switch between different processes, each with its own set of page tables.</p>
-<ul>
-<li><strong>Context Switching</strong>: When switching between processes, the OS updates <strong>CR3</strong> with the physical address of the new process&rsquo;s page tables, allowing the CPU to access the correct memory space for the active process.</li>
-<li><strong>Memory Isolation</strong>: <strong>CR3</strong> ensures that each process can only access its own memory pages unless explicitly permitted by the OS.</li>
-</ul>
-<h4 id="example-address-translation-workflow">Example: Address Translation Workflow</h4>
-<p>Given a virtual address like <code>0x00007FFFFFFFFFFF</code>, the translation process works as follows:</p>
-<ol>
-<li>The processor reads <strong>CR3</strong> to obtain the physical address of the <strong>PML4 table</strong>.</li>
-<li>Using <strong>bits 47-39</strong> of the virtual address, the processor locates the entry in the PML4 table.</li>
-<li>This entry points to the <strong>PDPT</strong>. The processor uses <strong>bits 38-30</strong> to index into the PDPT.</li>
-<li>The <strong>PDT</strong> entry is found using <strong>bits 29-21</strong>.</li>
-<li>The <strong>Page Table (PT)</strong> entry is located using <strong>bits 20-12</strong>.</li>
-<li>Finally, <strong>bits 11-0</strong> represent the <strong>offset</strong> within the physical page, allowing access to the specific data.</li>
-</ol>
+<p>The CR3 register contains the physical address of the base of the page directory. This register is crucial in paging because it allows the CPU to locate the page tables needed for virtual address translation. The page directory is a top-level data structure that the memory management unit (MMU) uses to start the process of translating a virtual address into a physical address. The contents of CR3 are updated whenever a context switch occurs to change the address space of the running process.</p>
+<p>In x86-64 systems, CR3 is responsible for pointing to the base of the PML4 (Page Map Level 4) table, which is the top level of the page table hierarchy.</p>
 <h3 id="cr4-register">CR4 Register</h3>
-<p>The <strong>CR4 register</strong> enables or disables advanced processor features, many of which affect how paging works. Key bits in <strong>CR4</strong> related to paging include:</p>
+<p>The CR4 register controls various advanced CPU features, many of which are related to memory management and protection mechanisms. Some of the relevant bits in CR4 include:</p>
 <ul>
-<li><strong>PAE (Physical Address Extension - Bit 5)</strong>: Enables <strong>36-bit physical addresses</strong>, allowing systems to use more than 4 GB of RAM in 32-bit mode. PAE also enables the <strong>NX (No-Execute)</strong> bit for additional security.</li>
-<li><strong>PSE (Page Size Extension - Bit 4)</strong>: Enables the use of <strong>4 MB pages</strong> instead of the standard 4 KB pages, reducing overhead in systems that require large memory allocations.</li>
-<li><strong>PGE (Page Global Enable - Bit 7)</strong>: Enables <strong>global pages</strong>, which stay in the Translation Lookaside Buffer (TLB) across context switches, improving performance for frequently accessed memory pages.</li>
-<li><strong>SMEP (Supervisor Mode Execution Prevention - Bit 20)</strong>: Prevents the kernel from executing user-mode code, protecting the system from certain types of attacks.</li>
-<li><strong>SMAP (Supervisor Mode Access Prevention - Bit 21)</strong>: Prevents the kernel from accessing user-mode memory, further isolating user-space processes from the kernel.</li>
-<li><strong>PCIDE (Process-Context Identifiers - Bit 17)</strong>: Improves <strong>context switching</strong> by allowing the processor to cache address translations for multiple processes, reducing the need to flush the TLB during each switch.</li>
-<li><strong>LA57 (5-Level Paging Enable - Bit 12)</strong>: Enables <strong>5-level paging</strong>, expanding the virtual address space up to 57 bits, useful for very large address spaces.</li>
+<li>PAE (Physical Address Extension): This flag enables 36-bit physical addressing, which allows for larger amounts of physical memory to be addressed than the standard 32-bit limit.</li>
+<li>PSE (Page Size Extension): This flag allows the use of large pages (4 MB in x86, 2 MB or 1 GB in x86-64 systems), which can improve performance by reducing the overhead of managing smaller 4 KB pages.</li>
+<li>SMEP (Supervisor Mode Execution Protection): This bit prevents supervisor-mode code (e.g., kernel code) from executing user-mode pages, which enhances security by reducing the risk of privilege escalation attacks.</li>
+<li>NXE (No-Execute Enable): This flag enables support for the NX (No-Execute) bit in page tables, which marks pages as non-executable, preventing code execution from regions of memory not intended to contain executable code (such as the stack or heap).</li>
 </ul>
-<h3 id="access-control-and-permissions">Access Control and Permissions</h3>
-<p>Each memory page has a set of <strong>permissions</strong> that dictate the allowed operations (e.g., read, write, execute). These permissions are critical for system security and stability. If a process tries to perform an unauthorized action, such as writing to a read-only page or executing code from a non-executable page, the system raises an <strong>Access Violation</strong> or <strong>Segmentation Fault</strong> exception.</p>
-<p>In Intel processors, these permissions are managed through <strong>control bits</strong> in the page tables:</p>
-<ul>
-<li><strong>R/W (Read/Write)</strong>: Specifies whether the page is writable or read-only.</li>
-<li><strong>U/S (User/Supervisor)</strong>: Controls whether the page can be accessed by user-mode applications or only by the kernel.</li>
-<li><strong>NX (Execute Disable)</strong>: Prevents code execution from the page.</li>
-</ul>
-<p>These permissions ensure that processes cannot access or modify memory they do not own, providing a key security layer in modern operating systems.</p>
+<p>Together, these control registers form the backbone of paging and memory protection mechanisms in modern x86 and x86-64 systems. They ensure efficient and secure handling of memory by controlling how virtual addresses are translated, how exceptions are handled, and how memory protection is enforced.</p>
+<h2 id="example-examining-virtual-and-physical-memory-using-windbg">Example: Examining virtual and physical memory using Windbg</h2>
+<p>To practically work with addresses in kernel mode using Windbg on a Windows 10 virtual machine, the first step is to change the context to the desired process. Here’s a detailed step-by-step explanation:</p>
+<h4 id="step-1-get-the-list-of-processes">Step 1: Get the List of Processes</h4>
+<p>To begin, I attached to my Windows 10 VM via Windbg in kernel mode. To check the pages of a process in kernel mode, we first need to change the context to that process. Use the command <code>!process 0 0</code> to get a list of all processes running on the system.</p>
+<table>
+<thead>
+<tr>
+<th><center> <img src="Windbg-Processes.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 5: The processes list in windbg </b></center></td>
+</tr>
+</tbody>
+</table>
+<h4 id="step-2-change-context-to-a-specific-process">Step 2: Change Context to a Specific Process</h4>
+<p>For this example, I am changing the context to cmd.exe. To do so, I need the address of the EPROCESS object for cmd.exe, which is ffffdd8291b29300. Then, I use the following command to change the context:
+Windbg will prompt me to enter g to complete the context switch.</p>
+<table>
+<thead>
+<tr>
+<th><center> <img src="Windbg-ChangingContext.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 6: Changing process context in windbg </b></center></td>
+</tr>
+</tbody>
+</table>
+<h4 id="step-3-find-virtual-address-descriptors-vad">Step 3: Find Virtual Address Descriptors (VAD)</h4>
+<p>Next, we need to find the page addresses. The !vad command provides details about the virtual address descriptors (VAD) of the process.</p>
+<table>
+<thead>
+<tr>
+<th><center> <img src="Windbg-VAD.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 7: Virtual Address Descriptors in windbg </b></center></td>
+</tr>
+</tbody>
+</table>
+<h4 id="step-4-retrieve-page-table-entry-pte">Step 4: Retrieve Page Table Entry (PTE)</h4>
+<p>From the VAD list, I randomly select one address and use the <code>!pte</code> command to retrieve the page table entry. For instance:</p>
+<table>
+<thead>
+<tr>
+<th><center> <img src="Windbg-PTE.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 8: The Page Table entries </b></center></td>
+</tr>
+</tbody>
+</table>
+<h4 id="step-5-determine-plm4-and-cr3-values">Step 5: Determine PLM4 and CR3 Values</h4>
+<p>To find the physical address for the page, we need the PLM4 address (FFFFEFF7FBFDFDD8) and the CR3 register value. The CR3 value is obtained by running:</p>
+<pre tabindex="0"><code>r cr3
+</code></pre><table>
+<thead>
+<tr>
+<th><center> <img src="Windbg-cr3.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 9: The cr3 register value </b></center></td>
+</tr>
+</tbody>
+</table>
+<p>The CR3 value is 00000000ab994002. To convert this into a usable form, the first 12 bits should be set to zero, resulting in 00000000AB994000.</p>
+<h4 id="step-6-convert-virtual-address-to-physical-address">Step 6: Convert Virtual Address to Physical Address</h4>
+<p>Using the !vtop command, I can convert the virtual address to a physical address:</p>
+<pre tabindex="0"><code>!vtop 00000000AB994000 FFFFEFF7FBFDFDD8
+</code></pre><table>
+<thead>
+<tr>
+<th><center> <img src="Windbg-vtop.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 10: Converting virtual address to the physical address using vtop command in windbg </b></center></td>
+</tr>
+</tbody>
+</table>
+<p>The output shows the translation of the virtual address FFFFEFF7FBFDFDD8 to the physical address ab994dd8.</p>
+<h4 id="step-7-verify-using-physical-and-virtual-dump-commands">Step 7: Verify Using Physical and Virtual Dump Commands</h4>
+<p>Finally, to verify the data in both the physical and virtual addresses, use the !dq command for the physical address:</p>
+<pre tabindex="0"><code>!dq 00000000ab994dd8
+</code></pre><p>And for the virtual address:</p>
+<pre tabindex="0"><code>dq FFFFEFF7FBFDFDD8
+</code></pre><p>Both commands will display the corresponding memory content:</p>
+<table>
+<thead>
+<tr>
+<th><center> <img src="Windbg-Physical-Virtual-Content.png" alt=""> </center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><center> <b>Figure 11: Comparing virtual memory and physical memory contents </b></center></td>
+</tr>
+</tbody>
+</table>
 
             </div>
         </article><hr style="margin-top: 40px; margin-bottom: 40px;" />
