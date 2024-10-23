@@ -56,7 +56,7 @@
         },
         "datePublished": "2024-10-21",
         "description": "An Introduction to Virtual memory and Paging in the Intel Architecture",
-        "wordCount":  3069 ,
+        "wordCount":  2997 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-10-21",
         "image": {
@@ -191,9 +191,8 @@ stroke-linejoin="round" class="feather feather-home">
     <li><a href="#virtual-memory">Virtual Memory</a></li>
     <li><a href="#page-sizes-in-virtual-memory">Page Sizes in Virtual Memory</a></li>
     <li><a href="#memory-page-states">Memory Page States</a></li>
-    <li><a href="#page-guard">Page Guard</a>
+    <li><a href="#guard-pages">Guard Pages</a>
       <ul>
-        <li><a href="#stack-management-and-page-guard">Stack Management and Page Guard</a></li>
         <li><a href="#windows-vmmap-example">Windows VMMap Example</a></li>
       </ul>
     </li>
@@ -313,13 +312,13 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>Free Pages</strong>: The Free pages are actually free and are not assigned to any process. These pages are available to be allocated to applications by the operating system as needed. When an application requests memory, free pages can be reserved first and then committed as needed. As with the previous type, any access to these pages without reservation and commit requests will result in memory page fault.</li>
 </ol>
 <p>By managing these page states, the operating system ensures that memory is allocated efficiently, reusing and swapping pages between RAM and disk when necessary.</p>
-<h2 id="page-guard">Page Guard</h2>
-<p>Page guard is a memory protection mechanism designed to prevent unauthorized or unexpected access to specific areas of memory. It works by marking certain memory pages as guarded, meaning that any access attempts to those pages will trigger an exception, such as a page fault. This is particularly useful in scenarios where access to memory needs to be controlled tightly for both security and stability reasons.</p>
-<h3 id="stack-management-and-page-guard">Stack Management and Page Guard</h3>
-<p>A common use case of page guard is for stack segments. In a multi-threaded process, each thread has its own stack pages, and these pages are stored in a segment of memory allocated specifically for stack usage. Without a page guard mechanism, a thread that overflows its stack could overwrite memory used by other threads or processes, potentially causing serious errors or security vulnerabilities. By enabling the page guard mechanism, when a thread attempts to write beyond its allocated stack, a page fault exception is generated, and the operating system can take appropriate action to prevent the overflow from corrupting adjacent memory.</p>
-<p>This protection mechanism is crucial in virtual memory systems because it ensures that critical sections of memory (like stack segments) are protected from accidental overwriting. In the absence of such a mechanism, a stack overflow could lead to data corruption or even system crashes.</p>
+<h2 id="guard-pages">Guard Pages</h2>
+<p>Guard pages are a specialized type of virtual memory page used to protect memory regions and manage dynamic memory growth. They are marked with a special protection mask that triggers an exception (STATUS_GUARD_PAGE_VIOLATION) when accessed, signaling that the boundary of committed memory has been reached.</p>
+<p>This exception can be handled by the program using a try/except block, allowing it to take action such as committing more memory. Once the guard page is accessed and the exception is handled, the system typically commits more memory to meet the program’s needs, and the previously protected guard page becomes part of the committed memory. A new guard page is then set at the next boundary to continue the protection.</p>
+<p>Guard pages are commonly used for managing stack growth in programs. A stack can reserve more memory than is immediately needed, committing additional pages dynamically as the program requires them, with guard pages ensuring that memory overruns are caught safely.</p>
+<p>Reserved memory for guard pages has a minimal impact on system resources, as the memory is only committed when it is accessed, ensuring efficient resource usage.</p>
 <h3 id="windows-vmmap-example">Windows VMMap Example</h3>
-<p>Figure 2 in the article shows a screenshot from VMMap, a tool for visualizing memory usage on Windows. It highlights how page guard is employed within the memory map of a running process, demonstrating how guarded pages are visually distinct from other types of memory. The <strong>key advantage</strong> of the page guard is its ability to catch buffer overflows and other forms of unauthorized memory access, which is essential in preventing vulnerabilities and maintaining system stability.</p>
+<p>Figure 2 in the article shows a screenshot from VMMap, a Windows tool for visualizing memory usage, highlighting how guard pages are visually distinct from other memory types and are used to manage the growth of memory regions dynamically.</p>
 <table>
 <thead>
 <tr>
@@ -328,7 +327,7 @@ stroke-linejoin="round" class="feather feather-home">
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 2: Display of pages and page guard mechanism in VMMAP software of Windows operating system</b></center></td>
+<td><center> <b>Figure 2: Display of pages and guard page mechanism in VMMAP software of Windows operating system</b></center></td>
 </tr>
 </tbody>
 </table>
