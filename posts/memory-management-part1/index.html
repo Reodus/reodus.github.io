@@ -56,7 +56,7 @@
         },
         "datePublished": "2024-10-21",
         "description": "An Introduction to Virtual memory and Paging in the Intel Architecture",
-        "wordCount":  2997 ,
+        "wordCount":  3394 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-10-21",
         "image": {
@@ -222,7 +222,7 @@ stroke-linejoin="round" class="feather feather-home">
         <li><a href="#cr4-register">CR4 Register</a></li>
       </ul>
     </li>
-    <li><a href="#example-examining-virtual-and-physical-memory-using-windbg">Example: Examining virtual and physical memory using Windbg</a>
+    <li><a href="#example-1-examining-virtual-and-physical-memory-using-windbg">Example 1: Examining virtual and physical memory using Windbg</a>
       <ul>
         <li>
           <ul>
@@ -233,6 +233,7 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#step-5-determine-plm4-and-cr3-values">Step 5: Determine PLM4 and CR3 Values</a></li>
             <li><a href="#step-6-convert-virtual-address-to-physical-address">Step 6: Convert Virtual Address to Physical Address</a></li>
             <li><a href="#step-7-verify-using-physical-and-virtual-dump-commands">Step 7: Verify Using Physical and Virtual Dump Commands</a></li>
+            <li><a href="#example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</a></li>
           </ul>
         </li>
       </ul>
@@ -447,7 +448,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li>NXE (No-Execute Enable): This flag enables support for the NX (No-Execute) bit in page tables, which marks pages as non-executable, preventing code execution from regions of memory not intended to contain executable code (such as the stack or heap).</li>
 </ul>
 <p>Together, these control registers form the backbone of paging and memory protection mechanisms in modern x86 and x86-64 systems. They ensure efficient and secure handling of memory by controlling how virtual addresses are translated, how exceptions are handled, and how memory protection is enforced.</p>
-<h2 id="example-examining-virtual-and-physical-memory-using-windbg">Example: Examining virtual and physical memory using Windbg</h2>
+<h2 id="example-1-examining-virtual-and-physical-memory-using-windbg">Example 1: Examining virtual and physical memory using Windbg</h2>
 <p>To practically work with addresses in kernel mode using Windbg on a Windows 10 virtual machine, the first step is to change the context to the desired process. Here’s a detailed step-by-step explanation:</p>
 <h4 id="step-1-get-the-list-of-processes">Step 1: Get the List of Processes</h4>
 <p>To begin, I attached to my Windows 10 VM via Windbg in kernel mode. To check the pages of a process in kernel mode, we first need to change the context to that process. Use the command <code>!process 0 0</code> to get a list of all processes running on the system.</p>
@@ -556,7 +557,70 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 </tr>
 </tbody>
 </table>
-
+<h4 id="example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</h4>
+<p>In the context of Windows memory management, PFN stands for <code>Page Frame Number</code>. It&rsquo;s an index that represents a page&rsquo;s location within physical memory, used by the memory manager to map virtual memory addresses to physical addresses. Each PFN points to a specific page in physical memory, helping the system to translate a virtual address into the actual physical address in RAM.</p>
+<p>When dealing with page table entries in Windows, the PFN typically occupies a part of the PTE. For example, in a typical 4 KB page configuration, the PFN, combined with the page offset, helps calculate the exact physical address.</p>
+<p>To translate a virtual address to a physical address using PFN, we can use the following formula:</p>
+<pre tabindex="0"><code>Physical address = (PFN * Page_Size) + Offset
+</code></pre><p>Let&rsquo;s examine how this applies with a sample C program that allocates memory at a specific virtual address:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">LPVOID</span> <span class="n">lpAddress</span> <span class="o">=</span> <span class="p">(</span><span class="n">LPVOID</span><span class="p">)</span><span class="mh">0x50000</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">LPVOID</span> <span class="n">allocatedMemory</span> <span class="o">=</span> <span class="nf">VirtualAlloc</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">lpAddress</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="mi">4096</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">MEM_COMMIT</span> <span class="o">|</span> <span class="n">MEM_RESERVE</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">PAGE_READWRITE</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">allocatedMemory</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Memory allocation failed at 0x51000. Error: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="nf">GetLastError</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Memory successfully allocated at address: 0x%p</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">allocatedMemory</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">memset</span><span class="p">(</span><span class="n">allocatedMemory</span><span class="p">,</span> <span class="mh">0x7f</span><span class="p">,</span> <span class="mi">4096</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nf">getchar</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">allocatedMemory</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">VirtualFree</span><span class="p">(</span><span class="n">allocatedMemory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MEM_RELEASE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Memory freed.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>This code allocates a 4KB page at virtual address <code>0x50000</code> and sets each byte to <code>0x7f</code>. After running this code, you can check the PTE for this address in WinDbg:</p>
+<pre tabindex="0"><code>2: kd&gt; !pte 0x0000000000050000
+                                           VA 0000000000050000
+PXE at FFFFD8EC763B1000    PPE at FFFFD8EC76200000    PDE at FFFFD8EC40000000    PTE at FFFFD88000000280
+contains 8A00000024489867  contains 0A0000011CCE4867  contains 0A00000114BE5867  contains 81000000360E6867
+pfn 24489     ---DA--UW-V  pfn 11cce4    ---DA--UWEV  pfn 114be5    ---DA--UWEV  pfn 360e6     ---DA--UW-V
+</code></pre><p>Here, the PFN for the page table entry (PTE) is <code>0x360e6</code>. Since each page is 4KB, we can calculate the physical address:</p>
+<pre tabindex="0"><code>Physical Address = 0x360e6 * 0x1000 + 0 = 0x360e6000
+</code></pre><p>To verify, use the dq command to view the contents at both the virtual and physical addresses:</p>
+<pre tabindex="0"><code>2: kd&gt; dq 0x50000
+00000000`00050000  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+00000000`00050010  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+00000000`00050020  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+00000000`00050030  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+00000000`00050040  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+00000000`00050050  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+00000000`00050060  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+00000000`00050070  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+2: kd&gt; !dq 0x360e6000
+#360e6000 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+#360e6010 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+#360e6020 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+#360e6030 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+#360e6040 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+#360e6050 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+#360e6060 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+#360e6070 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</code></pre>
             </div>
         </article><hr style="margin-top: 40px; margin-bottom: 40px;" />
 <div id="disqus_thread"></div>
