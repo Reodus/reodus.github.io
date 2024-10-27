@@ -233,9 +233,9 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#step-5-determine-plm4-and-cr3-values">Step 5: Determine PLM4 and CR3 Values</a></li>
             <li><a href="#step-6-convert-virtual-address-to-physical-address">Step 6: Convert Virtual Address to Physical Address</a></li>
             <li><a href="#step-7-verify-using-physical-and-virtual-dump-commands">Step 7: Verify Using Physical and Virtual Dump Commands</a></li>
-            <li><a href="#example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</a></li>
           </ul>
         </li>
+        <li><a href="#example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</a></li>
       </ul>
     </li>
   </ul>
@@ -557,7 +557,7 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</h4>
+<h3 id="example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</h3>
 <p>In the context of Windows memory management, PFN stands for <code>Page Frame Number</code>. It&rsquo;s an index that represents a page&rsquo;s location within physical memory, used by the memory manager to map virtual memory addresses to physical addresses. Each PFN points to a specific page in physical memory, helping the system to translate a virtual address into the actual physical address in RAM.</p>
 <p>When dealing with page table entries in Windows, the PFN typically occupies a part of the PTE. For example, in a typical 4 KB page configuration, the PFN, combined with the page offset, helps calculate the exact physical address.</p>
 <p>To translate a virtual address to a physical address using PFN, we can use the following formula:</p>
