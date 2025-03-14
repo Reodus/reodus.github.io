@@ -1,259 +1,297 @@
 <!DOCTYPE html>
-<html lang="en-us"><head><meta charset="utf-8">
-<meta http-equiv="content-type" content="text/html">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+    
 
-<title itemprop="name">Memory Management - Part 1: Virtual memory and Paging concepts | Reodus</title>
-<meta property="og:title" content="Memory Management - Part 1: Virtual memory and Paging concepts | Reodus" />
-<meta name="twitter:title" content="Memory Management - Part 1: Virtual memory and Paging concepts | Reodus" />
-<meta itemprop="name" content="Memory Management - Part 1: Virtual memory and Paging concepts | Reodus" />
-<meta name="application-name" content="Memory Management - Part 1: Virtual memory and Paging concepts | Reodus" />
-<meta property="og:site_name" content="Reodus" />
 
-<meta name="description" content="An Introduction to Virtual memory and Paging in the Intel Architecture">
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+<script defer language="javascript" type="text/javascript" src="/js/bundle.min.91ae35f985ba4ae6473b8defee39551f3ce6ed2769fdfa9b3df93f2eac0da4bc.js"></script>
+
+
+
+
+
+
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <link rel="icon" href=/favicon.png>
+
+    
+    
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+
+
+<!-- Open Graph image and Twitter Card metadata -->
+
+<title itemprop="name">Reodus - Memory Management - Part 1: Virtual memory and Paging concepts</title>
+<meta property="og:title" content=Reodus&#32;-&#32;Memory&#32;Management&#32;-&#32;Part&#32;1:&#32;Virtual&#32;memory&#32;and&#32;Paging&#32;concepts />
+<meta name="twitter:title" content=Reodus&#32;-&#32;Memory&#32;Management&#32;-&#32;Part&#32;1:&#32;Virtual&#32;memory&#32;and&#32;Paging&#32;concepts />
+<meta itemprop="name" content=Reodus&#32;-&#32;Memory&#32;Management&#32;-&#32;Part&#32;1:&#32;Virtual&#32;memory&#32;and&#32;Paging&#32;concepts />
+<meta name="application-name" content=Reodus&#32;-&#32;Memory&#32;Management&#32;-&#32;Part&#32;1:&#32;Virtual&#32;memory&#32;and&#32;Paging&#32;concepts />
+<meta property="og:site_name" content="" />
+
+
+<meta name="description" content="An Introduction to Virtual memory and Paging in the Intel Architecture" />
 <meta itemprop="description" content="An Introduction to Virtual memory and Paging in the Intel Architecture" />
 <meta property="og:description" content="An Introduction to Virtual memory and Paging in the Intel Architecture" />
 <meta name="twitter:description" content="An Introduction to Virtual memory and Paging in the Intel Architecture" />
 
-<meta property="og:locale" content="en-us" />
-<meta name="language" content="en-us" />
+
+<base href="/posts/memory-management-part1/" />
+<link rel="canonical" href="/posts/memory-management-part1/" itemprop="url" />
+<meta name="url" content="/posts/memory-management-part1/" />
+<meta name="twitter:url" content="/posts/memory-management-part1/" />
+<meta property="og:url" content="/posts/memory-management-part1/" />
+
+
+<meta property="og:updated_time" content="2024-10-21T00:00:00Z" />
+
+
+<link rel="sitemap" type="application/xml" title="Sitemap" href='/sitemap.xml' />
+
+<meta name="robots" content="index,follow" />
+<meta name="googlebot" content="index,follow" />
 
 
 
-  <meta itemprop="image" content="https://reodus.com/" />
-  <meta property="og:image" content="https://reodus.com/" />
-  <meta name="twitter:image" content="https://reodus.com/" />
-  <meta name="twitter:image:src" content="https://reodus.com/" />
+<meta property="fb:admins" content="" />
+
+
+<meta name="apple-mobile-web-app-title" content="" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
 
 
 
-    
-    
-    
-    
-
-    <meta property="og:type" content="article" />
-    <meta property="og:article:published_time" content=2024-10-21T00:00:00Z />
-    <meta property="article:published_time" content=2024-10-21T00:00:00Z />
-
-    
-    <meta property="og:article:author" content="Amir m. jahangirzad" />
-    <meta property="article:author" content="Amir m. jahangirzad" />
-    <meta name="author" content="Amir m. jahangirzad" />
-    
-
-    
-
-    <script defer type="application/ld+json">
-    {
-        "@context": "http://schema.org",
-        "@type": "Article",
-        "headline": "Memory Management - Part 1: Virtual memory and Paging concepts",
-        "author": {
-        "@type": "Person",
-        "name": ""
-        },
-        "datePublished": "2024-10-21",
-        "description": "An Introduction to Virtual memory and Paging in the Intel Architecture",
-        "wordCount":  3394 ,
-        "mainEntityOfPage": "True",
-        "dateModified": "2024-10-21",
-        "image": {
-        "@type": "imageObject",
-        "url": ""
-        },
-        "publisher": {
-        "@type": "Organization",
-        "name": "Reodus"
-        }
-    }
-    </script>
 
 
 <meta name="generator" content="Hugo 0.122.0">
 
-    
-
-    <link rel="canonical" href="https://reodus.com/posts/memory-management-part1/">
-    <link href="/style.min.d43bc6c79baa87f006efb2b92be952faeedeb1a3ab626c1d6abda52eae049355.css" rel="stylesheet">
-    <link href="/code-highlight.min.9d9971b4b569835865e5617a058c37b759289ce4de19430938e8f1157f91ea05.css" rel="stylesheet">
 
     
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
-    <link rel="shortcut icon" href="/favicon.ico">
+    
 
+<link type="text/css" rel="stylesheet" href="/css/bundle.min.94a339836f89f0d25f31980cb6b0631da21e20af128308747ce44e0525eb16ef.css">
 
-
-
-<link rel="manifest" href="https://reodus.com/site.webmanifest">
-
-<meta name="msapplication-config" content="/browserconfig.xml">
-<meta name="msapplication-TileColor" content="#2d89ef">
-<meta name="theme-color" content="#434648">
 
     
-    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+    <style>
+    body {
+        --sidebar-bg-color: #202020;
+        --sidebar-img-border-color: #515151;
+        --sidebar-p-color: #909090;
+        --sidebar-h1-color: #FFF;
+        --sidebar-a-color: #FFF;
+        --sidebar-socials-color: #FFF;
+        --text-color: #222;
+        --bkg-color: #FAF9F6;
+        --post-title-color: #303030;
+        --list-color: #5A5A5A;
+        --link-color: #268BD2;
+        --date-color: #515151;
+        --table-border-color: #E5E5E5;
+        --table-stripe-color: #F9F9F9;
+        --code-color: #000;
+        --code-background-color: #E5E5E5;
+        --code-block-color: #FFF;
+        --code-block-background-color: #272822;
+        --moon-sun-color: #FFF;
+        --moon-sun-background-color: #515151;
+    }
+    body.dark-theme {
+        --text-color: #EEE;
+        --bkg-color: #121212;
+        --post-title-color: #DBE2E9;
+        --list-color: #9D9D9D;
+        --link-color: #268BD2;
+        --date-color: #9A9A9A;
+        --table-border-color: #515151;
+        --table-stripe-color: #202020;
+        --code-color: #FFF;
+        --code-background-color: #515151;
+        --code-block-color: #FFF;
+        --code-block-background-color: #272822;
+    }
+    body {
+        background-color: var(--bkg-color);
+    }
+</style>
 
-    
-    </head>
-<body data-theme = "light" class="notransition">
+</head>
 
-<script src="/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
-
-<div class="navbar" role="navigation">
-    <nav class="menu" aria-label="Main Navigation">
-        <a href="https://reodus.com/" class="logo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
-viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-stroke-linejoin="round" class="feather feather-home">
-<title>Home</title>
-<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-<polyline points="9 22 9 12 15 12 15 22"></polyline>
-</svg>
-        </a>
-        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
-        <label for="menu-trigger">
-            <span class="menu-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
-            </span>
-        </label>
-
-        <div class="trigger">
-            <ul class="trigger-container">
-                
-                
-                <li>
-                    <a class="menu-link " href="/">
-                        Home
-                    </a>
-                    
-                </li>
-                
-                <li>
-                    <a class="menu-link active" href="/posts/">
-                        Posts
-                    </a>
-                    
-                </li>
-                
-                <li>
-                    <a class="menu-link " href="/pages/about/">
-                        About
-                    </a>
-                    
-                </li>
-                
-                <li>
-                    <a class="menu-link " href="/categories/">
-                        Categories
-                    </a>
-                    
-                </li>
-                
-                <li class="menu-separator">
-                    <span>|</span>
-                </li>
-                
-                
-            </ul>
-            <a id="mode" href="#">
-                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
-<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
-<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
-            </a>
-        </div>
-    </nav>
+    <body class="dark-theme">
+        <div class="wrapper">
+            <aside class="sidebar">
+    <div class="container sidebar-sticky">
+        <div class="light-dark" align="right">
+    <button class="btn-light-dark" title="Toggle light/dark mode">
+        <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+            <path fill="currentColor" d="M6 .278a.768.768 0 0 1 .08.858a7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277c.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316a.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71C0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+        </svg>
+        <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+            <path fill="currentColor" d="M8 12a4 4 0 1 0 0-8a4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+        </svg>
+    </button>
 </div>
 
-<div class="wrapper post">
-    <main class="page-content" aria-label="Content">
-        <article>
-            <header class="header">
-                <h1 class="header-title">Memory Management - Part 1: Virtual memory and Paging concepts</h1>
-                
-                
-                <div class="post-meta">
-                    <time datetime="2024-10-21T00:00:00&#43;00:00" itemprop="datePublished"> Oct 21, 2024 </time>
-                </div>
-                
-            </header>
-            
-    
-    <details class="toc" ZgotmplZ>
-        <summary><b>Table of Contents</b></summary>
-        <nav id="TableOfContents">
-  <ul>
-    <li><a href="#virtual-memory">Virtual Memory</a></li>
-    <li><a href="#page-sizes-in-virtual-memory">Page Sizes in Virtual Memory</a></li>
-    <li><a href="#memory-page-states">Memory Page States</a></li>
-    <li><a href="#guard-pages">Guard Pages</a>
-      <ul>
-        <li><a href="#windows-vmmap-example">Windows VMMap Example</a></li>
-      </ul>
-    </li>
-    <li><a href="#page-table-hierarchy-and-address-translation">Page Table Hierarchy and Address Translation</a>
-      <ul>
-        <li><a href="#whats-the-use-of-page-levels">What&rsquo;s the use of page levels?</a></li>
-      </ul>
-    </li>
-    <li><a href="#page-levels-in-the-intel-x86-64-architecture">Page Levels in the Intel x86-64 Architecture</a>
-      <ul>
-        <li>
-          <ul>
-            <li><a href="#pml4">PML4</a></li>
-            <li><a href="#pdpt">PDPT</a></li>
-            <li><a href="#pdt">PDT</a></li>
-            <li><a href="#pt">PT</a></li>
-          </ul>
-        </li>
-        <li><a href="#example-translating-a-64-bit-virtual-address">Example: Translating a 64-bit Virtual Address</a></li>
-      </ul>
-    </li>
-    <li><a href="#control-registers-for-paging">Control Registers for Paging</a>
-      <ul>
-        <li><a href="#cr0-register">CR0 Register</a></li>
-        <li><a href="#cr2-register">CR2 Register</a></li>
-        <li><a href="#cr3-register">CR3 Register</a></li>
-        <li><a href="#cr4-register">CR4 Register</a></li>
-      </ul>
-    </li>
-    <li><a href="#example-1-examining-virtual-and-physical-memory-using-windbg">Example 1: Examining virtual and physical memory using Windbg</a>
-      <ul>
-        <li>
-          <ul>
-            <li><a href="#step-1-get-the-list-of-processes">Step 1: Get the List of Processes</a></li>
-            <li><a href="#step-2-change-context-to-a-specific-process">Step 2: Change Context to a Specific Process</a></li>
-            <li><a href="#step-3-find-virtual-address-descriptors-vad">Step 3: Find Virtual Address Descriptors (VAD)</a></li>
-            <li><a href="#step-4-retrieve-page-table-entry-pte">Step 4: Retrieve Page Table Entry (PTE)</a></li>
-            <li><a href="#step-5-determine-plm4-and-cr3-values">Step 5: Determine PLM4 and CR3 Values</a></li>
-            <li><a href="#step-6-convert-virtual-address-to-physical-address">Step 6: Convert Virtual Address to Physical Address</a></li>
-            <li><a href="#step-7-verify-using-physical-and-virtual-dump-commands">Step 7: Verify Using Physical and Virtual Dump Commands</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-    <li><a href="#example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</a></li>
-  </ul>
+        <div class="sidebar-about">
+    <h1 class="brand">
+        
+            <a href="/">
+                <img src="https://avatars.githubusercontent.com/u/161498863" alt="brand image">
+            </a>
+        
+        
+            <a href="/">
+                <h1>Reodus</h1>
+            </a>
+        
+    </h1>
+    <p class="lead">
+    Here I write about computer system security
+    </p>
+</div>
+
+        <nav>
+    <ul class="sidebar-nav">
+
+        
+        
+        
+
+    </ul>
 </nav>
-    </details>
-            <div class="page-content">
-                <p>Memory is an important part of a computer system that is used to store data. The process of memory management is critical because there is a limited amount of memory available to a computer system. One of the most important parts in the kernel of an operating system is the memory management part. In this section, the kernel has the task of making the memory available to the executive units (like processes or threads) by effectively communicating with the <strong>memory management unit</strong> in the processor, or in other words, allocating the memory to them.</p>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a target="_blank" class="social" title="RSS Feed" href="/posts/index.xml">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1.2em" viewBox="0 0 1280.000000 1280.000000">
+            <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)" fill="currentColor">
+                <path d="M2295 11929 c-284 -12 -642 -45 -707 -65 -17 -5 -18 -63 -18 -1039 0 -569 4 -1036 8 -1039 5 -3 74 6 153 19 510 86 1168 95 1789 25 1348 -153 2602 -677 3670 -1531 385 -308 820 -744 1126 -1129 842 -1060 1362 -2313 1514 -3650 70 -621 61 -1279 -25 -1789 -13 -79 -22 -148 -19 -153 3 -4 471 -8 1039 -8 l1035 0 5 23 c51 225 85 942 67 1419 -23 605 -77 1044 -198 1617 -294 1400 -927 2734 -1823 3846 -1043 1295 -2364 2259 -3909 2854 -1158 447 -2451 656 -3707 600z"/>
+                <path d="M2255 7845 c-269 -25 -620 -81 -667 -106 -17 -9 -18 -55 -18 -899 0 -706 3 -890 13 -890 6 0 66 18 132 41 130 44 288 79 467 105 154 21 577 30 749 15 1207 -107 2267 -823 2814 -1902 166 -327 268 -637 330 -1001 38 -227 48 -384 42 -662 -8 -348 -44 -590 -126 -831 -23 -66 -41 -126 -41 -132 0 -10 184 -13 890 -13 844 0 890 1 899 18 27 50 88 452 110 725 14 162 14 624 1 782 -59 703 -233 1323 -545 1945 -481 956 -1313 1788 -2270 2268 -620 310 -1239 483 -1940 542 -165 14 -669 10 -840 -5z"/>
+                <path d="M2519 3815 c-391 -66 -725 -336 -868 -703 -79 -201 -96 -462 -45 -677 83 -344 338 -641 666 -774 116 -47 205 -69 330 -80 412 -39 811 153 1040 500 193 292 240 648 128 981 -135 403 -492 699 -914 757 -100 14 -241 12 -337 -4z"/>
+            </g>
+        </svg>
+    </a>
+
+
+    <a target="_blank" class="social" title="Email" href="mailto://user@domain">
+       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1.2em" viewBox="0 0 485.211 485.211">
+            <path fill="currentColor" d="M301.393,241.631L464.866,424.56H20.332l163.474-182.928l58.801,51.443L301.393,241.631z M462.174,60.651H23.027 l219.579,192.142L462.174,60.651z M324.225,221.67l160.986,180.151V80.792L324.225,221.67z M0,80.792v321.029L160.972,221.64 L0,80.792z"/>
+       </svg>
+    </a>
+
+
+
+
+        <p class="footnote">
+powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a target="_blank" href="https://github.com/lukeorth/poison">poison</a>
+    <br>
+    &copy; 2025 . All rights reserved.
+</p>
+
+  </div>
+</aside>
+
+            <main class="content container">
+                <div class="post">
+  <div class="info">
+  <h1 class="post-title">
+    <a href="/posts/memory-management-part1/">Memory Management - Part 1: Virtual memory and Paging concepts</a>
+  </h1>
+
+  <div class="headline">
+    <div>
+      
+        
+          <span>Amir M. Jahangirzad - </span>
+        
+      
+      
+      <time datetime=" 2024-10-21T00:00:00Z" class="post-date">
+        October 21, 2024
+      </time>
+      
+      <span> - </span>
+      <span class="reading-time">
+        
+          
+        
+
+        <span>16 mins read</span>
+      </span>
+    </div>
+
+    
+  </div>
+
+  
+  
+
+  
+</div>
+
+  <p>Memory is an important part of a computer system that is used to store data. The process of memory management is critical because there is a limited amount of memory available to a computer system. One of the most important parts in the kernel of an operating system is the memory management part. In this section, the kernel has the task of making the memory available to the executive units (like processes or threads) by effectively communicating with the <strong>memory management unit</strong> in the processor, or in other words, allocating the memory to them.</p>
 <h2 id="virtual-memory">Virtual Memory</h2>
 <p>Virtual memory is one of the memory management techniques in the operating system. Using this technique for memory management in operating systems makes the processes have the illusion that they have a very large space of memory at their disposal, when the main memory space can be much more limited. In this model, the operating system divides the virtual memory into smaller pieces called pages. The reason for this segmentation is to simplify the process of accessing different memory locations. Each of these pages can be considered equivalent to a location in main memory or secondary memory. This means that some memory pages of a process can be stored in RAM while others can be stored on disk. Figure 1 shows an abstract of this topic.</p>
 <table>
 <thead>
 <tr>
-<th><center> <img src="MemoryPages.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="MemoryPages.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 1: Abstraction of process pages and their mapped locations in main memory and secondary memory</b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 1: Abstraction of process pages and their mapped locations in main memory and secondary memory<!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -323,12 +361,12 @@ stroke-linejoin="round" class="feather feather-home">
 <table>
 <thead>
 <tr>
-<th><center> <img src="PageGuard-VMMAP.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="PageGuard-VMMAP.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 2: Display of pages and guard page mechanism in VMMAP software of Windows operating system</b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 2: Display of pages and guard page mechanism in VMMAP software of Windows operating system<!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -342,7 +380,7 @@ stroke-linejoin="round" class="feather feather-home">
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 3: Abstraction of an old architecture for communication between MMU and addresses </b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 3: Abstraction of an old architecture for communication between MMU and addresses <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -373,7 +411,7 @@ stroke-linejoin="round" class="feather feather-home">
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 4: Paging Levels from AMD Architecture programmer&rsquo;s manual, volume 2</b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 4: Paging Levels from AMD Architecture programmer&rsquo;s manual, volume 2<!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -455,12 +493,12 @@ stroke-linejoin="round" class="feather feather-home">
 <table>
 <thead>
 <tr>
-<th><center> <img src="Windbg-Processes.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="Windbg-Processes.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 5: The processes list in windbg </b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 5: The processes list in windbg <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -470,12 +508,12 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 <table>
 <thead>
 <tr>
-<th><center> <img src="Windbg-ChangingContext.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="Windbg-ChangingContext.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 6: Changing process context in windbg </b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 6: Changing process context in windbg <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -484,12 +522,12 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 <table>
 <thead>
 <tr>
-<th><center> <img src="Windbg-VAD.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="Windbg-VAD.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 7: Virtual Address Descriptors in windbg </b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 7: Virtual Address Descriptors in windbg <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -498,12 +536,12 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 <table>
 <thead>
 <tr>
-<th><center> <img src="Windbg-PTE.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="Windbg-PTE.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 8: The Page Table entries </b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 8: The Page Table entries <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -513,12 +551,12 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 </code></pre><table>
 <thead>
 <tr>
-<th><center> <img src="Windbg-cr3.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="Windbg-cr3.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 9: The cr3 register value </b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 9: The cr3 register value <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -529,12 +567,12 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 </code></pre><table>
 <thead>
 <tr>
-<th><center> <img src="Windbg-vtop.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="Windbg-vtop.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 10: Converting virtual address to the physical address using vtop command in windbg </b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 10: Converting virtual address to the physical address using vtop command in windbg <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -548,12 +586,12 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 <table>
 <thead>
 <tr>
-<th><center> <img src="Windbg-Physical-Virtual-Content.png" alt=""> </center></th>
+<th><!-- raw HTML omitted --> <img src="Windbg-Physical-Virtual-Content.png" alt=""> <!-- raw HTML omitted --></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><center> <b>Figure 11: Comparing virtual memory and physical memory contents </b></center></td>
+<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 11: Comparing virtual memory and physical memory contents <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
@@ -563,151 +601,129 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 <p>To translate a virtual address to a physical address using PFN, we can use the following formula:</p>
 <pre tabindex="0"><code>Physical address = (PFN * Page_Size) + Offset
 </code></pre><p>Let&rsquo;s examine how this applies with a sample C program that allocates memory at a specific virtual address:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">LPVOID</span> <span class="n">lpAddress</span> <span class="o">=</span> <span class="p">(</span><span class="n">LPVOID</span><span class="p">)</span><span class="mh">0x50000</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">LPVOID</span> <span class="n">allocatedMemory</span> <span class="o">=</span> <span class="nf">VirtualAlloc</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">        <span class="n">lpAddress</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="mi">4096</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="n">MEM_COMMIT</span> <span class="o">|</span> <span class="n">MEM_RESERVE</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="n">PAGE_READWRITE</span>
-</span></span><span class="line"><span class="cl">    <span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">allocatedMemory</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Memory allocation failed at 0x50000. Error: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="nf">GetLastError</span><span class="p">());</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Memory successfully allocated at address: 0x%p</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">allocatedMemory</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">memset</span><span class="p">(</span><span class="n">allocatedMemory</span><span class="p">,</span> <span class="mh">0x7f</span><span class="p">,</span> <span class="mi">4096</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="nf">getchar</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">allocatedMemory</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">VirtualFree</span><span class="p">(</span><span class="n">allocatedMemory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MEM_RELEASE</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Memory freed.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    LPVOID lpAddress <span style="color:#f92672">=</span> (LPVOID)<span style="color:#ae81ff">0x50000</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    LPVOID allocatedMemory <span style="color:#f92672">=</span> <span style="color:#a6e22e">VirtualAlloc</span>(
+</span></span><span style="display:flex;"><span>        lpAddress,
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">4096</span>,
+</span></span><span style="display:flex;"><span>        MEM_COMMIT <span style="color:#f92672">|</span> MEM_RESERVE,
+</span></span><span style="display:flex;"><span>        PAGE_READWRITE
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (allocatedMemory <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Memory allocation failed at 0x50000. Error: %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#a6e22e">GetLastError</span>());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Memory successfully allocated at address: 0x%p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, allocatedMemory);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">memset</span>(allocatedMemory, <span style="color:#ae81ff">0x7f</span>, <span style="color:#ae81ff">4096</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">getchar</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (allocatedMemory <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">VirtualFree</span>(allocatedMemory, <span style="color:#ae81ff">0</span>, MEM_RELEASE);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Memory freed.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This code allocates a 4KB page at virtual address <code>0x50000</code> and sets each byte to <code>0x7f</code>. After running this code, you can check the PTE for this address in WinDbg:</p>
-<pre tabindex="0"><code>2: kd&gt; !pte 0x0000000000050000
-                                           VA 0000000000050000
-PXE at FFFFD8EC763B1000    PPE at FFFFD8EC76200000    PDE at FFFFD8EC40000000    PTE at FFFFD88000000280
-contains 8A00000024489867  contains 0A0000011CCE4867  contains 0A00000114BE5867  contains 81000000360E6867
-pfn 24489     ---DA--UW-V  pfn 11cce4    ---DA--UWEV  pfn 114be5    ---DA--UWEV  pfn 360e6     ---DA--UW-V
-</code></pre><p>Here, the PFN for the page table entry (PTE) is <code>0x360e6</code>. Since each page is 4KB, we can calculate the physical address:</p>
-<pre tabindex="0"><code>Physical Address = 0x360e6 * 0x1000 + 0 = 0x360e6000
-</code></pre><p>To verify, use the dq command to view the contents at both the virtual and physical addresses:</p>
-<pre tabindex="0"><code>2: kd&gt; dq 0x50000
-00000000`00050000  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-00000000`00050010  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-00000000`00050020  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-00000000`00050030  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-00000000`00050040  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-00000000`00050050  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-00000000`00050060  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-00000000`00050070  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-2: kd&gt; !dq 0x360e6000
-#360e6000 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-#360e6010 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-#360e6020 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-#360e6030 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-#360e6040 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-#360e6050 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-#360e6060 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-#360e6070 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
-</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>2: kd&gt; !pte 0x0000000000050000
+</span></span><span style="display:flex;"><span>                                           VA 0000000000050000
+</span></span><span style="display:flex;"><span>PXE at FFFFD8EC763B1000    PPE at FFFFD8EC76200000    PDE at FFFFD8EC40000000    PTE at FFFFD88000000280
+</span></span><span style="display:flex;"><span>contains 8A00000024489867  contains 0A0000011CCE4867  contains 0A00000114BE5867  contains 81000000360E6867
+</span></span><span style="display:flex;"><span>pfn 24489     ---DA--UW-V  pfn 11cce4    ---DA--UWEV  pfn 114be5    ---DA--UWEV  pfn 360e6     ---DA--UW-V
+</span></span></code></pre></div><p>Here, the PFN for the page table entry (PTE) is <code>0x360e6</code>. Since each page is 4KB, we can calculate the physical address:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>Physical Address = 0x360e6 * 0x1000 + 0 = 0x360e6000
+</span></span></code></pre></div><p>To verify, use the dq command to view the contents at both the virtual and physical addresses:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>2: kd&gt; dq 0x50000
+</span></span><span style="display:flex;"><span>00000000`00050000  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>00000000`00050010  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>00000000`00050020  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>00000000`00050030  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>00000000`00050040  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>00000000`00050050  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>00000000`00050060  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>00000000`00050070  7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>2: kd&gt; !dq 0x360e6000
+</span></span><span style="display:flex;"><span>#360e6000 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>#360e6010 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>#360e6020 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>#360e6030 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>#360e6040 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>#360e6050 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>#360e6060 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span><span style="display:flex;"><span>#360e6070 7f7f7f7f`7f7f7f7f 7f7f7f7f`7f7f7f7f
+</span></span></code></pre></div>
+  
+  <hr>
+<div class="footer">
+    
+	    
+            <a class="previous-post" href="/posts/fuzzer-internals-part3/?ref=footer"><span style="font-weight:bold;">« Previous</span><br>Fuzzer Internals - Part 3: Generation-Based...</a>
+        
+	    
+            <div class="next-post">
+                <a href="/posts/cve-2025-29625/?ref=footer"><span style="font-weight:bold;">Next »</span><br>Buffer Overflow Vulnerability in Astrolog v7.70...</a>
             </div>
-        </article><hr style="margin-top: 40px; margin-bottom: 40px;" />
-<div id="disqus_thread"></div>
-<script>
-    window.disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "reodus" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a></main>
-</div>
-<footer class="footer">
-    <span class="footer_item"> </span>
-    &nbsp;
-
-    <div class="footer_social-icons">
-<a href="https://github.com/reodus" target="_blank" rel="noopener noreferrer me"
-    title="Github">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-    stroke-linecap="round" stroke-linejoin="round">
-    <path
-        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-    </path>
-</svg>
-</a>
-<a href="https://x.com/reodus_" target="_blank" rel="noopener noreferrer me"
-    title="X">
-    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path
-        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
-</svg>
-</a>
-<a href="index.xml" target="_blank" rel="noopener noreferrer me"
-    title="Rss">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-    stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 11a9 9 0 0 1 9 9" />
-    <path d="M4 4a16 16 0 0 1 16 16" />
-    <circle cx="5" cy="19" r="1" />
-</svg>
-</a>
-</div>
-    <small class="footer_copyright">
-        © 2025 Reo.
-        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
-    </small>
-</footer><a href="#" title="Go to top" id="totop">
-    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
-    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
-</svg>
-
-</a>
-
-
-    
-
-
-
-
-    
-    
         
     
+</div>
 
-    
-    
-        
-    
+  
+</div>
+            </main>
+            
+  
+    <div class="article-toc ">
+    <div class="toc-wrapper">
+      <h4 id="contents"></h4>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#virtual-memory">Virtual Memory</a></li>
+    <li><a href="#page-sizes-in-virtual-memory">Page Sizes in Virtual Memory</a></li>
+    <li><a href="#memory-page-states">Memory Page States</a></li>
+    <li><a href="#guard-pages">Guard Pages</a>
+      <ul>
+        <li><a href="#windows-vmmap-example">Windows VMMap Example</a></li>
+      </ul>
+    </li>
+    <li><a href="#page-table-hierarchy-and-address-translation">Page Table Hierarchy and Address Translation</a>
+      <ul>
+        <li><a href="#whats-the-use-of-page-levels">What&rsquo;s the use of page levels?</a></li>
+      </ul>
+    </li>
+    <li><a href="#page-levels-in-the-intel-x86-64-architecture">Page Levels in the Intel x86-64 Architecture</a>
+      <ul>
+        <li></li>
+        <li><a href="#example-translating-a-64-bit-virtual-address">Example: Translating a 64-bit Virtual Address</a></li>
+      </ul>
+    </li>
+    <li><a href="#control-registers-for-paging">Control Registers for Paging</a>
+      <ul>
+        <li><a href="#cr0-register">CR0 Register</a></li>
+        <li><a href="#cr2-register">CR2 Register</a></li>
+        <li><a href="#cr3-register">CR3 Register</a></li>
+        <li><a href="#cr4-register">CR4 Register</a></li>
+      </ul>
+    </li>
+    <li><a href="#example-1-examining-virtual-and-physical-memory-using-windbg">Example 1: Examining virtual and physical memory using Windbg</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</a></li>
+  </ul>
+</nav>
+    </div>
+</div>
 
+  
 
-
-    
-    <script src="https://reodus.com/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
-
-    
-
-</body>
+        </div>
+    </body>
 </html>
