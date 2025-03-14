@@ -2,13 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://reodus.com/categories/</loc>
-    <lastmod>2024-10-21T00:00:00+00:00</lastmod>
+    <loc>https://reodus.com/posts/cve-2025-29625/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://reodus.com/categories/cpu/</loc>
-    <lastmod>2024-10-21T00:00:00+00:00</lastmod>
+    <loc>https://reodus.com/categories/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/categories/cve/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://reodus.com/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/posts/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://reodus.com/categories/cpu/</loc>
     <lastmod>2024-10-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://reodus.com/categories/intel/</loc>
@@ -27,9 +36,6 @@
     <lastmod>2024-10-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://reodus.com/categories/paging/</loc>
-    <lastmod>2024-10-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://reodus.com/posts/</loc>
     <lastmod>2024-10-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://reodus.com/categories/virtual-memory/</loc>

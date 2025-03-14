@@ -6,7 +6,18 @@
     <description>Recent content in Categories on Reodus</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://reodus.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://reodus.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE</title>
+      <link>https://reodus.com/categories/cve/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://reodus.com/categories/cve/</guid>
+      
+      <description></description>
+      
+    </item>
+    
     <item>
       <title>CPU</title>
       <link>https://reodus.com/categories/cpu/</link>
