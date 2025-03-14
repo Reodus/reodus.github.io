@@ -282,7 +282,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </div>
 
         
-        Buffer Overflow Vulnerability in Astrolog v7.70 (CVE-2025-29625) Overview A buffer overflow vulnerability has been discovered in Astrolog v7.70, a popular open-source astrology software. This vulnerability allows an attacker to execute arbitrary code or cause a Denial of Service (DoS) by supplying an overly long environment variable to the FileOpen function.
+        Overview A buffer overflow vulnerability has been discovered in Astrolog v7.70, a popular open-source astrology software. This vulnerability allows an attacker to execute arbitrary code or cause a Denial of Service (DoS) by supplying an overly long environment variable to the FileOpen function.
 CVE ID: CVE-2025-29625 Vulnerability Type: Buffer Overflow Impact: Remote Code Execution (RCE) &amp; Denial of Service (DoS) Attack Vector: Local (via environment variables) Technical Details The vulnerability exists in the following section of the FileOpen function, where the program reads environment variables and constructs file paths using sprintf without proper bounds checking:
         
         <div class="read-more-link">
