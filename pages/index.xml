@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pages on </title>
-    <link>//localhost:1313/pages/</link>
+    <link>/pages/</link>
     <description>Recent content in Pages on </description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="//localhost:1313/pages/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/pages/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About</title>
-      <link>//localhost:1313/pages/about/</link>
+      <link>/pages/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/pages/about/</guid>
+      <guid>/pages/about/</guid>
       <description>&lt;h2 id=&#34;who-am-i&#34;&gt;Who Am I&lt;/h2&gt;&#xA;&lt;p&gt;Hello Friends. My name is Amir Mohammad Jahangirzad. I&amp;rsquo;m a system security researcher who is interested in low level concepts like &lt;u&gt;OS internals&lt;/u&gt;, &lt;u&gt;Vulnerability Research&lt;/u&gt;, &lt;u&gt;Reverse Engineering&lt;/u&gt; and &lt;u&gt;Binary Exploitation&lt;/u&gt;.&lt;/p&gt;</description>
     </item>
   </channel>

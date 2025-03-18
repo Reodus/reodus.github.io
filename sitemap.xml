@@ -2,33 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>//localhost:1313/posts/cve-2025-29625/</loc>
+    <loc>/posts/cve-2025-29625/</loc>
     <lastmod>2025-03-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/</loc>
+    <loc>/</loc>
     <lastmod>2025-03-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/posts/</loc>
+    <loc>/posts/</loc>
     <lastmod>2025-03-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/posts/memory-management-part1/</loc>
+    <loc>/posts/memory-management-part1/</loc>
     <lastmod>2024-10-21T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/posts/fuzzer-internals-part3/</loc>
+    <loc>/posts/fuzzer-internals-part3/</loc>
     <lastmod>2024-02-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/posts/fuzzer-internals-part2/</loc>
+    <loc>/posts/fuzzer-internals-part2/</loc>
     <lastmod>2024-02-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/posts/fuzzer-internals-part1/</loc>
+    <loc>/posts/fuzzer-internals-part1/</loc>
     <lastmod>2024-01-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/pages/about/</loc>
+    <loc>/pages/about/</loc>
   </url><url>
-    <loc>//localhost:1313/pages/</loc>
+    <loc>/pages/</loc>
   </url><url>
-    <loc>//localhost:1313/series/</loc>
+    <loc>/series/</loc>
   </url><url>
-    <loc>//localhost:1313/tags/</loc>
+    <loc>/tags/</loc>
   </url>
 </urlset>
