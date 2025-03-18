@@ -2,46 +2,46 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on </title>
-    <link>/posts/</link>
+    <link>//localhost:1313/posts/</link>
     <description>Recent content in Posts on </description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="//localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Buffer Overflow Vulnerability in Astrolog v7.70 (CVE-2025-29625)</title>
-      <link>/posts/cve-2025-29625/</link>
+      <link>//localhost:1313/posts/cve-2025-29625/</link>
       <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>/posts/cve-2025-29625/</guid>
-      <description>Overview A buffer overflow vulnerability has been discovered in Astrolog v7.70, a popular open-source astrology software. This vulnerability allows an attacker to execute arbitrary code or cause a Denial of Service (DoS) by supplying an overly long environment variable to the FileOpen function.&#xA;CVE ID: CVE-2025-29625 Vulnerability Type: Buffer Overflow Impact: Remote Code Execution (RCE) &amp;amp; Denial of Service (DoS) Attack Vector: Local (via environment variables) Technical Details The vulnerability exists in the following section of the FileOpen function, where the program reads environment variables and constructs file paths using sprintf without proper bounds checking:</description>
+      <guid>//localhost:1313/posts/cve-2025-29625/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;&#xA;&lt;p&gt;A buffer overflow vulnerability has been discovered in Astrolog v7.70, a popular open-source astrology software. This vulnerability allows an attacker to execute arbitrary code or cause a Denial of Service (DoS) by supplying an overly long environment variable to the &lt;code&gt;FileOpen&lt;/code&gt; function.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;CVE ID:&lt;/strong&gt; CVE-2025-29625&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Vulnerability Type:&lt;/strong&gt; Buffer Overflow&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Impact:&lt;/strong&gt; Remote Code Execution (RCE) &amp;amp; Denial of Service (DoS)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Attack Vector:&lt;/strong&gt; Local (via environment variables)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;technical-details&#34;&gt;Technical Details&lt;/h2&gt;&#xA;&lt;p&gt;The vulnerability exists in the following section of the FileOpen function, where the program reads environment variables and constructs file paths using sprintf without proper bounds checking:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Memory Management - Part 1: Virtual memory and Paging concepts</title>
-      <link>/posts/memory-management-part1/</link>
+      <link>//localhost:1313/posts/memory-management-part1/</link>
       <pubDate>Mon, 21 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>/posts/memory-management-part1/</guid>
-      <description>Memory is an important part of a computer system that is used to store data. The process of memory management is critical because there is a limited amount of memory available to a computer system. One of the most important parts in the kernel of an operating system is the memory management part. In this section, the kernel has the task of making the memory available to the executive units (like processes or threads) by effectively communicating with the memory management unit in the processor, or in other words, allocating the memory to them.</description>
+      <guid>//localhost:1313/posts/memory-management-part1/</guid>
+      <description>&lt;p&gt;Memory is an important part of a computer system that is used to store data. The process of memory management is critical because there is a limited amount of memory available to a computer system. One of the most important parts in the kernel of an operating system is the memory management part. In this section, the kernel has the task of making the memory available to the executive units (like processes or threads) by effectively communicating with the &lt;strong&gt;memory management unit&lt;/strong&gt; in the processor, or in other words, allocating the memory to them.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Fuzzer Internals - Part 3: Generation-Based Fuzzers (Dumb Fuzzer)</title>
-      <link>/posts/fuzzer-internals-part3/</link>
+      <link>//localhost:1313/posts/fuzzer-internals-part3/</link>
       <pubDate>Sat, 24 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>/posts/fuzzer-internals-part3/</guid>
-      <description>Now, I guess we are ready to make our hands dirty by writing a simple fuzzer. I start with Generation Based Fuzzers. As we discussed in Part 1, generation-based fuzzers are a kind of fuzzers that generate input from scratch. As I mentioned befre, they can be divided into two categories: smart fuzzers and dumb fuzzers. Smart fuzzers recognize the input structure, but dumb fuzzers don&amp;rsquo;t.&#xA;Dumb Generation-Based Fuzzers In this part, I use C++ language to create a simple dumb generation-based fuzzer but basically, the concepts are the same so you can choose your own programming language to continue the tutorial.</description>
+      <guid>//localhost:1313/posts/fuzzer-internals-part3/</guid>
+      <description>&lt;p&gt;Now, I guess we are ready to make our hands dirty by writing a simple fuzzer. I start with &lt;strong&gt;Generation Based Fuzzers&lt;/strong&gt;. As we discussed in &lt;a href=&#34;//localhost:1313/posts/fuzzer-internals-part1/&#34;&gt;Part 1&lt;/a&gt;, generation-based fuzzers are a kind of fuzzers that generate input from scratch. As I mentioned befre, they can be divided into two categories: smart fuzzers and dumb fuzzers. Smart fuzzers recognize the input structure, but dumb fuzzers don&amp;rsquo;t.&lt;/p&gt;&#xA;&lt;h2 id=&#34;dumb-generation-based-fuzzers&#34;&gt;Dumb Generation-Based Fuzzers&lt;/h2&gt;&#xA;&lt;p&gt;In this part, I use &lt;strong&gt;C++&lt;/strong&gt; language to create a simple dumb generation-based fuzzer but basically, the concepts are the same so you can choose your own programming language to continue the tutorial.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Fuzzer Internals - Part 2: Software Vulnerability Fundamentals</title>
-      <link>/posts/fuzzer-internals-part2/</link>
+      <link>//localhost:1313/posts/fuzzer-internals-part2/</link>
       <pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>/posts/fuzzer-internals-part2/</guid>
-      <description>Before getting into fuzzer internals, it’s necessary to understand the minimum concept of vulnerabilities and anything related to them. In this part, the fundamental concept is explained. I hope it will be useful for you.&#xA;Understanding Vulnerability Analysis Vulnerability analysis is the process of identifying, assessing, and prioritizing the security weaknesses in a system. Vulnerability analysis is important for maintaining the confidentiality, integrity, and availability of the data and services that the system provides.</description>
+      <guid>//localhost:1313/posts/fuzzer-internals-part2/</guid>
+      <description>&lt;p&gt;Before getting into fuzzer internals, it’s necessary to understand the minimum concept of vulnerabilities and anything related to them. In this part, the fundamental concept is explained. I hope it will be useful for you.&lt;/p&gt;&#xA;&lt;h2 id=&#34;understanding-vulnerability-analysis&#34;&gt;Understanding Vulnerability Analysis&lt;/h2&gt;&#xA;&lt;p&gt;Vulnerability analysis is the process of identifying, assessing, and prioritizing the security weaknesses in a system. Vulnerability analysis is important for maintaining the confidentiality, integrity, and availability of the data and services that the system provides. It is a critical component of any comprehensive security strategy, as it allows organizations to proactively address potential threats before they can be exploited by malicious actors.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Fuzzer Internals - Part 1: Introduction to Fuzzers</title>
-      <link>/posts/fuzzer-internals-part1/</link>
+      <link>//localhost:1313/posts/fuzzer-internals-part1/</link>
       <pubDate>Mon, 29 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>/posts/fuzzer-internals-part1/</guid>
-      <description>About this tutorial I decided to study Fuzzers and in this way, I wanna teach what I learn through my research. Let&amp;rsquo;s get to it.&#xA;Software Security Software security is a critical aspect of software development that focuses on safeguarding software applications from potential threats. This involves a set of practices that are integrated into the software development process to prevent unauthorized access, use, disclosure, disruption, modification, or destruction. Software security testing can be introduced at various organizations of:</description>
+      <guid>//localhost:1313/posts/fuzzer-internals-part1/</guid>
+      <description>&lt;h2 id=&#34;about-this-tutorial&#34;&gt;About this tutorial&lt;/h2&gt;&#xA;&lt;p&gt;I decided to study Fuzzers and in this way, I wanna teach what I learn through my research. Let&amp;rsquo;s get to it.&lt;/p&gt;&#xA;&lt;h2 id=&#34;software-security&#34;&gt;Software Security&lt;/h2&gt;&#xA;&lt;p&gt;Software security is a critical aspect of software development that focuses on safeguarding software applications from potential threats. This involves a set of practices that are integrated into the software development process to prevent unauthorized access, use, disclosure, disruption, modification, or destruction. Software security testing can be introduced at various organizations of:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

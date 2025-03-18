@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     
 
 
@@ -20,7 +20,7 @@
 
 
 
-<script defer language="javascript" type="text/javascript" src="/js/bundle.min.91ae35f985ba4ae6473b8defee39551f3ce6ed2769fdfa9b3df93f2eac0da4bc.js"></script>
+<script defer language="javascript" type="text/javascript" src="/js/bundle.min.5991d603939a6d188be342b278a4555db90f163903158c623d2c39fde3d82cb3.js"></script>
 
 
 
@@ -70,17 +70,17 @@
 <meta name="twitter:description" content="An Introduction to Virtual memory and Paging in the Intel Architecture" />
 
 
-<base href="/posts/memory-management-part1/" />
-<link rel="canonical" href="/posts/memory-management-part1/" itemprop="url" />
-<meta name="url" content="/posts/memory-management-part1/" />
-<meta name="twitter:url" content="/posts/memory-management-part1/" />
-<meta property="og:url" content="/posts/memory-management-part1/" />
+<base href="//localhost:1313/posts/memory-management-part1/" />
+<link rel="canonical" href="//localhost:1313/posts/memory-management-part1/" itemprop="url" />
+<meta name="url" content="//localhost:1313/posts/memory-management-part1/" />
+<meta name="twitter:url" content="//localhost:1313/posts/memory-management-part1/" />
+<meta property="og:url" content="//localhost:1313/posts/memory-management-part1/" />
 
 
 <meta property="og:updated_time" content="2024-10-21T00:00:00Z" />
 
 
-<link rel="sitemap" type="application/xml" title="Sitemap" href='/sitemap.xml' />
+<link rel="sitemap" type="application/xml" title="Sitemap" href='//localhost:1313/sitemap.xml' />
 
 <meta name="robots" content="index,follow" />
 <meta name="googlebot" content="index,follow" />
@@ -99,13 +99,13 @@
 
 
 
-<meta name="generator" content="Hugo 0.122.0">
+<meta name="generator" content="Hugo 0.145.0">
 
 
     
     
 
-<link type="text/css" rel="stylesheet" href="/css/bundle.min.94a339836f89f0d25f31980cb6b0631da21e20af128308747ce44e0525eb16ef.css">
+<link type="text/css" rel="stylesheet" href="/css/bundle.min.311830ed8ad192c420e333f7bd9cfa8b7480556f40786eaeed3d42e177db360b.css">
 
 
     
@@ -153,7 +153,7 @@
 
 </head>
 
-    <body class="dark-theme">
+    <body class="">
         <div class="wrapper">
             <aside class="sidebar">
     <div class="container sidebar-sticky">
@@ -171,12 +171,12 @@
         <div class="sidebar-about">
     <h1 class="brand">
         
-            <a href="/">
+            <a href="//localhost:1313/">
                 <img src="https://avatars.githubusercontent.com/u/161498863" alt="brand image">
             </a>
         
         
-            <a href="/">
+            <a href="//localhost:1313/">
                 <h1>Reodus</h1>
             </a>
         
@@ -246,7 +246,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
                 <div class="post">
   <div class="info">
   <h1 class="post-title">
-    <a href="/posts/memory-management-part1/">Memory Management - Part 1: Virtual memory and Paging concepts</a>
+    <a href="//localhost:1313/posts/memory-management-part1/">Memory Management - Part 1: Virtual memory and Paging concepts</a>
   </h1>
 
   <div class="headline">
@@ -284,16 +284,16 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <h2 id="virtual-memory">Virtual Memory</h2>
 <p>Virtual memory is one of the memory management techniques in the operating system. Using this technique for memory management in operating systems makes the processes have the illusion that they have a very large space of memory at their disposal, when the main memory space can be much more limited. In this model, the operating system divides the virtual memory into smaller pieces called pages. The reason for this segmentation is to simplify the process of accessing different memory locations. Each of these pages can be considered equivalent to a location in main memory or secondary memory. This means that some memory pages of a process can be stored in RAM while others can be stored on disk. Figure 1 shows an abstract of this topic.</p>
 <table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="MemoryPages.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 1: Abstraction of process pages and their mapped locations in main memory and secondary memory<!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="MemoryPages.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 1: Abstraction of process pages and their mapped locations in main memory and secondary memory</b></center></td>
+      </tr>
+  </tbody>
 </table>
 <p>This approach offers two main benefits:</p>
 <ol>
@@ -308,40 +308,40 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <li><strong>Huge Pages (1 GB)</strong>: the size of these pages is equal to 1 GB. Very large pages are used for applications that require access to very large volumes of data and are typically used in server systems or high-performance computing environments. By using huge pages, the need for a large number of page tables is eliminated, which reduces the operating system&rsquo;s burden of memory management. Hence, it is suitable for extremely large applications such as very large databases, virtual machine disks and big data analysis. Also, for the same reason as the previous type, these pages are not flexible and are used only in special cases. The table below shows the size of pages in different architectures.</li>
 </ol>
 <table>
-<thead>
-<tr>
-<th>Architecture</th>
-<th>Small Pages</th>
-<th>Large Pages</th>
-<th>Huge Pages</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>x86-32</td>
-<td>4 KB</td>
-<td>2 MB</td>
-<td>1 GB</td>
-</tr>
-<tr>
-<td>x86-64</td>
-<td>4 KB</td>
-<td>2 MB</td>
-<td>1 GB</td>
-</tr>
-<tr>
-<td>ARM</td>
-<td>4 KB</td>
-<td>4 MB</td>
-<td>-</td>
-</tr>
-<tr>
-<td>ARM64</td>
-<td>4 KB</td>
-<td>2 MB</td>
-<td>512 MB</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Architecture</th>
+          <th>Small Pages</th>
+          <th>Large Pages</th>
+          <th>Huge Pages</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>x86-32</td>
+          <td>4 KB</td>
+          <td>2 MB</td>
+          <td>1 GB</td>
+      </tr>
+      <tr>
+          <td>x86-64</td>
+          <td>4 KB</td>
+          <td>2 MB</td>
+          <td>1 GB</td>
+      </tr>
+      <tr>
+          <td>ARM</td>
+          <td>4 KB</td>
+          <td>4 MB</td>
+          <td>-</td>
+      </tr>
+      <tr>
+          <td>ARM64</td>
+          <td>4 KB</td>
+          <td>2 MB</td>
+          <td>512 MB</td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="memory-page-states">Memory Page States</h2>
 <p>In addition to different sizes, memory pages can exist in various <strong>states</strong> within the system. These states determine how the pages are used and whether they are available for allocation:</p>
@@ -359,30 +359,30 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <h3 id="windows-vmmap-example">Windows VMMap Example</h3>
 <p>Figure 2 in the article shows a screenshot from VMMap, a Windows tool for visualizing memory usage, highlighting how guard pages are visually distinct from other memory types and are used to manage the growth of memory regions dynamically.</p>
 <table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="PageGuard-VMMAP.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 2: Display of pages and guard page mechanism in VMMAP software of Windows operating system<!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="PageGuard-VMMAP.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 2: Display of pages and guard page mechanism in VMMAP software of Windows operating system</b></center></td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="page-table-hierarchy-and-address-translation">Page Table Hierarchy and Address Translation</h2>
 <p>In general, in virtual memory technique, there are two types of addressing methods called <strong>virtual/logical address</strong> and <strong>physical address</strong>. The virtual address belongs to the virtual space of the memory that is dedicated to the processes, and the physical address is the exact location of the desired data in the physical memory. Although the process of allocating memory, creating and managing pages is the responsibility of the operating system, the task of translating the virtual address to the physical address is the responsibility of a hardware part called <strong>Memory Management Unit (MMU)</strong>. The work of this hardware is address translation, access control and cache control. In the address translation section, the operating system can access the location of the physical address by giving the virtual address to the MMU and can perform its desired actions. Figure 3 shows the form in which the MMU is considered a separate hardware unit and the processor uses it to access the memory.</p>
 <table>
-<thead>
-<tr>
-<th><img src="MMU.png" alt=""></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 3: Abstraction of an old architecture for communication between MMU and addresses <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><img src="MMU.png" alt=""></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 3: Abstraction of an old architecture for communication between MMU and addresses </b></center></td>
+      </tr>
+  </tbody>
 </table>
 <p>In the x86-64 architecture, while the virtual address is theoretically 64-bits, only the lower 48 bits are used bacause of limitations in current implementations. This means that 256 TB of virtual memory is addressable and accessible (That&rsquo;s why there&rsquo;s a free gap between user-space and kernel-space). The virtual address is translated in 5 different levels in the page tables, but the Windows operating system supports only 4 levels, which we will examine only those four levels below.</p>
 <h3 id="whats-the-use-of-page-levels">What&rsquo;s the use of page levels?</h3>
@@ -404,16 +404,16 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <h4 id="pt">PT</h4>
 <p>This level is the last level of the page table where each entry points to a 4 KB page of physical memory. PT also has 512 entries, and each entry points to a 4KB physical frame. This hierarchical structure efficiently manages large virtual memory spaces and reduces the complexity of maintaining large page tables.</p>
 <table>
-<thead>
-<tr>
-<th><img src="Paging-Levels.png" alt=""></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 4: Paging Levels from AMD Architecture programmer&rsquo;s manual, volume 2<!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><img src="Paging-Levels.png" alt=""></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 4: Paging Levels from AMD Architecture programmer&rsquo;s manual, volume 2</b></center></td>
+      </tr>
+  </tbody>
 </table>
 <hr>
 <p>The virtual address is divided into 5 parts and each part is used to index into a different level of the page table hierarchy. For example, in x86-64 systems, the <strong>address translation</strong> process in paging level works as follows:</p>
@@ -427,40 +427,40 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <h3 id="example-translating-a-64-bit-virtual-address">Example: Translating a 64-bit Virtual Address</h3>
 <p>Consider a 64-bit virtual address like <code>0x00007FFFFFFFFFFF</code>. This address is divided into segments, with each segment used to index into a different level of the page table hierarchy. The breakdown is as follows:</p>
 <table>
-<thead>
-<tr>
-<th>Segment</th>
-<th>Binary Value</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PML4</td>
-<td><code>000000000</code></td>
-<td>Index into the PML4 table</td>
-</tr>
-<tr>
-<td>PDPT</td>
-<td><code>111111111</code></td>
-<td>Index into the PDPT</td>
-</tr>
-<tr>
-<td>PDT</td>
-<td><code>111111111</code></td>
-<td>Index into the PDT</td>
-</tr>
-<tr>
-<td>PT</td>
-<td><code>111111111</code></td>
-<td>Index into the PT</td>
-</tr>
-<tr>
-<td>Offset</td>
-<td><code>111111111111</code></td>
-<td>Offset within the page</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Segment</th>
+          <th>Binary Value</th>
+          <th>Purpose</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>PML4</td>
+          <td><code>000000000</code></td>
+          <td>Index into the PML4 table</td>
+      </tr>
+      <tr>
+          <td>PDPT</td>
+          <td><code>111111111</code></td>
+          <td>Index into the PDPT</td>
+      </tr>
+      <tr>
+          <td>PDT</td>
+          <td><code>111111111</code></td>
+          <td>Index into the PDT</td>
+      </tr>
+      <tr>
+          <td>PT</td>
+          <td><code>111111111</code></td>
+          <td>Index into the PT</td>
+      </tr>
+      <tr>
+          <td>Offset</td>
+          <td><code>111111111111</code></td>
+          <td>Offset within the page</td>
+      </tr>
+  </tbody>
 </table>
 <p>This structure means that the processor uses these bits to navigate the multi-level page table hierarchy. The PML4 entry is used to locate the corresponding PDPT entry, and so on, until the final physical page is identified, and the <strong>offset</strong> is applied to access the specific data within the page.</p>
 <h2 id="control-registers-for-paging">Control Registers for Paging</h2>
@@ -491,90 +491,90 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <h4 id="step-1-get-the-list-of-processes">Step 1: Get the List of Processes</h4>
 <p>To begin, I attached to my Windows 10 VM via Windbg in kernel mode. To check the pages of a process in kernel mode, we first need to change the context to that process. Use the command <code>!process 0 0</code> to get a list of all processes running on the system.</p>
 <table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="Windbg-Processes.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 5: The processes list in windbg <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="Windbg-Processes.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 5: The processes list in windbg </b></center></td>
+      </tr>
+  </tbody>
 </table>
 <h4 id="step-2-change-context-to-a-specific-process">Step 2: Change Context to a Specific Process</h4>
 <p>For this example, I am changing the context to cmd.exe. To do so, I need the address of the EPROCESS object for cmd.exe, which is ffffdd8291b29300. Then, I use the following command to change the context:
 Windbg will prompt me to enter g to complete the context switch.</p>
 <table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="Windbg-ChangingContext.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 6: Changing process context in windbg <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="Windbg-ChangingContext.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 6: Changing process context in windbg </b></center></td>
+      </tr>
+  </tbody>
 </table>
 <h4 id="step-3-find-virtual-address-descriptors-vad">Step 3: Find Virtual Address Descriptors (VAD)</h4>
 <p>Next, we need to find the page addresses. The !vad command provides details about the virtual address descriptors (VAD) of the process.</p>
 <table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="Windbg-VAD.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 7: Virtual Address Descriptors in windbg <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="Windbg-VAD.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 7: Virtual Address Descriptors in windbg </b></center></td>
+      </tr>
+  </tbody>
 </table>
 <h4 id="step-4-retrieve-page-table-entry-pte">Step 4: Retrieve Page Table Entry (PTE)</h4>
 <p>From the VAD list, I randomly select one address and use the <code>!pte</code> command to retrieve the page table entry. For instance:</p>
 <table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="Windbg-PTE.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 8: The Page Table entries <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="Windbg-PTE.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 8: The Page Table entries </b></center></td>
+      </tr>
+  </tbody>
 </table>
 <h4 id="step-5-determine-plm4-and-cr3-values">Step 5: Determine PLM4 and CR3 Values</h4>
 <p>To find the physical address for the page, we need the PLM4 address (FFFFEFF7FBFDFDD8) and the CR3 register value. The CR3 value is obtained by running:</p>
 <pre tabindex="0"><code>r cr3
 </code></pre><table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="Windbg-cr3.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 9: The cr3 register value <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="Windbg-cr3.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 9: The cr3 register value </b></center></td>
+      </tr>
+  </tbody>
 </table>
 <p>The CR3 value is 00000000ab994002. To convert this into a usable form, the first 12 bits should be set to zero, resulting in 00000000AB994000.</p>
 <h4 id="step-6-convert-virtual-address-to-physical-address">Step 6: Convert Virtual Address to Physical Address</h4>
 <p>Using the !vtop command, I can convert the virtual address to a physical address:</p>
 <pre tabindex="0"><code>!vtop 00000000AB994000 FFFFEFF7FBFDFDD8
 </code></pre><table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="Windbg-vtop.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 10: Converting virtual address to the physical address using vtop command in windbg <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="Windbg-vtop.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 10: Converting virtual address to the physical address using vtop command in windbg </b></center></td>
+      </tr>
+  </tbody>
 </table>
 <p>The output shows the translation of the virtual address FFFFEFF7FBFDFDD8 to the physical address ab994dd8.</p>
 <h4 id="step-7-verify-using-physical-and-virtual-dump-commands">Step 7: Verify Using Physical and Virtual Dump Commands</h4>
@@ -584,16 +584,16 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 <pre tabindex="0"><code>dq FFFFEFF7FBFDFDD8
 </code></pre><p>Both commands will display the corresponding memory content:</p>
 <table>
-<thead>
-<tr>
-<th><!-- raw HTML omitted --> <img src="Windbg-Physical-Virtual-Content.png" alt=""> <!-- raw HTML omitted --></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><!-- raw HTML omitted --> <!-- raw HTML omitted -->Figure 11: Comparing virtual memory and physical memory contents <!-- raw HTML omitted --><!-- raw HTML omitted --></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><center> <img src="Windbg-Physical-Virtual-Content.png" alt=""> </center></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><center> <b>Figure 11: Comparing virtual memory and physical memory contents </b></center></td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="example-2-finding-the-physical-address-of-a-page-using-the-pfn-formula-in-windows">Example 2: Finding the Physical Address of a Page Using the PFN Formula in Windows</h2>
 <p>In the context of Windows memory management, PFN stands for <code>Page Frame Number</code>. It&rsquo;s an index that represents a page&rsquo;s location within physical memory, used by the memory manager to map virtual memory addresses to physical addresses. Each PFN points to a specific page in physical memory, helping the system to translate a virtual address into the actual physical address in RAM.</p>
@@ -664,11 +664,11 @@ Windbg will prompt me to enter g to complete the context switch.</p>
 <div class="footer">
     
 	    
-            <a class="previous-post" href="/posts/fuzzer-internals-part3/?ref=footer"><span style="font-weight:bold;">« Previous</span><br>Fuzzer Internals - Part 3: Generation-Based...</a>
+            <a class="previous-post" href="//localhost:1313/posts/fuzzer-internals-part3/?ref=footer"><span style="font-weight:bold;">« Previous</span><br>Fuzzer Internals - Part 3: Generation-Based...</a>
         
 	    
             <div class="next-post">
-                <a href="/posts/cve-2025-29625/?ref=footer"><span style="font-weight:bold;">Next »</span><br>Buffer Overflow Vulnerability in Astrolog v7.70...</a>
+                <a href="//localhost:1313/posts/cve-2025-29625/?ref=footer"><span style="font-weight:bold;">Next »</span><br>Buffer Overflow Vulnerability in Astrolog v7.70...</a>
             </div>
         
     

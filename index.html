@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     
 
 
@@ -20,7 +20,7 @@
 
 
 
-<script defer language="javascript" type="text/javascript" src="/js/bundle.min.91ae35f985ba4ae6473b8defee39551f3ce6ed2769fdfa9b3df93f2eac0da4bc.js"></script>
+<script defer language="javascript" type="text/javascript" src="/js/bundle.min.5991d603939a6d188be342b278a4555db90f163903158c623d2c39fde3d82cb3.js"></script>
 
 
 
@@ -67,18 +67,18 @@
 <meta name="twitter:description" content="Here I write about computer system security" />
 
 
-<base href="/" />
-<link rel="canonical" href="/" itemprop="url" />
-<meta name="url" content="/" />
-<meta name="twitter:url" content="/" />
-<meta property="og:url" content="/" />
+<base href="//localhost:1313/" />
+<link rel="canonical" href="//localhost:1313/" itemprop="url" />
+<meta name="url" content="//localhost:1313/" />
+<meta name="twitter:url" content="//localhost:1313/" />
+<meta property="og:url" content="//localhost:1313/" />
 
 
 <meta property="og:updated_time" content="2025-03-14T00:00:00Z" />
 
 
-<link rel="sitemap" type="application/xml" title="Sitemap" href='/sitemap.xml' />
-<link href="/index.xml" rel="alternate" type="application/rss+xml" title="" />
+<link rel="sitemap" type="application/xml" title="Sitemap" href='//localhost:1313/sitemap.xml' />
+<link href="//localhost:1313/index.xml" rel="alternate" type="application/rss+xml" title="" />
 
 <meta name="robots" content="index,follow" />
 <meta name="googlebot" content="index,follow" />
@@ -97,13 +97,13 @@
 
 
 
-<meta name="generator" content="Hugo 0.122.0">
+<meta name="generator" content="Hugo 0.145.0">
 
 
     
     
 
-<link type="text/css" rel="stylesheet" href="/css/bundle.min.94a339836f89f0d25f31980cb6b0631da21e20af128308747ce44e0525eb16ef.css">
+<link type="text/css" rel="stylesheet" href="/css/bundle.min.311830ed8ad192c420e333f7bd9cfa8b7480556f40786eaeed3d42e177db360b.css">
 
 
     
@@ -151,7 +151,7 @@
 
 </head>
 
-    <body class="dark-theme">
+    <body class="">
         <div class="wrapper">
             <aside class="sidebar">
     <div class="container sidebar-sticky">
@@ -169,12 +169,12 @@
         <div class="sidebar-about">
     <h1 class="brand">
         
-            <a href="/">
+            <a href="//localhost:1313/">
                 <img src="https://avatars.githubusercontent.com/u/161498863" alt="brand image">
             </a>
         
         
-            <a href="/">
+            <a href="//localhost:1313/">
                 <h1>Reodus</h1>
             </a>
         
@@ -247,7 +247,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
     <article class="post">
         <div class="info">
   <h1 class="post-title">
-    <a href="/posts/cve-2025-29625/">Buffer Overflow Vulnerability in Astrolog v7.70 (CVE-2025-29625)</a>
+    <a href="//localhost:1313/posts/cve-2025-29625/">Buffer Overflow Vulnerability in Astrolog v7.70 (CVE-2025-29625)</a>
   </h1>
 
   <div class="headline">
@@ -282,8 +282,16 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </div>
 
         
-        Overview A buffer overflow vulnerability has been discovered in Astrolog v7.70, a popular open-source astrology software. This vulnerability allows an attacker to execute arbitrary code or cause a Denial of Service (DoS) by supplying an overly long environment variable to the FileOpen function.
-CVE ID: CVE-2025-29625 Vulnerability Type: Buffer Overflow Impact: Remote Code Execution (RCE) &amp; Denial of Service (DoS) Attack Vector: Local (via environment variables) Technical Details The vulnerability exists in the following section of the FileOpen function, where the program reads environment variables and constructs file paths using sprintf without proper bounds checking:
+        <h2 id="overview">Overview</h2>
+<p>A buffer overflow vulnerability has been discovered in Astrolog v7.70, a popular open-source astrology software. This vulnerability allows an attacker to execute arbitrary code or cause a Denial of Service (DoS) by supplying an overly long environment variable to the <code>FileOpen</code> function.</p>
+<ul>
+<li><strong>CVE ID:</strong> CVE-2025-29625</li>
+<li><strong>Vulnerability Type:</strong> Buffer Overflow</li>
+<li><strong>Impact:</strong> Remote Code Execution (RCE) &amp; Denial of Service (DoS)</li>
+<li><strong>Attack Vector:</strong> Local (via environment variables)</li>
+</ul>
+<h2 id="technical-details">Technical Details</h2>
+<p>The vulnerability exists in the following section of the FileOpen function, where the program reads environment variables and constructs file paths using sprintf without proper bounds checking:</p>
         
         <div class="read-more-link">
             <a href="/posts/cve-2025-29625/">Read More…</a>
@@ -294,7 +302,7 @@ CVE ID: CVE-2025-29625 Vulnerability Type: Buffer Overflow Impact: Remote Code E
     <article class="post">
         <div class="info">
   <h1 class="post-title">
-    <a href="/posts/memory-management-part1/">Memory Management - Part 1: Virtual memory and Paging concepts</a>
+    <a href="//localhost:1313/posts/memory-management-part1/">Memory Management - Part 1: Virtual memory and Paging concepts</a>
   </h1>
 
   <div class="headline">
@@ -329,7 +337,7 @@ CVE ID: CVE-2025-29625 Vulnerability Type: Buffer Overflow Impact: Remote Code E
 </div>
 
         
-        Memory is an important part of a computer system that is used to store data. The process of memory management is critical because there is a limited amount of memory available to a computer system. One of the most important parts in the kernel of an operating system is the memory management part. In this section, the kernel has the task of making the memory available to the executive units (like processes or threads) by effectively communicating with the memory management unit in the processor, or in other words, allocating the memory to them.
+        <p>Memory is an important part of a computer system that is used to store data. The process of memory management is critical because there is a limited amount of memory available to a computer system. One of the most important parts in the kernel of an operating system is the memory management part. In this section, the kernel has the task of making the memory available to the executive units (like processes or threads) by effectively communicating with the <strong>memory management unit</strong> in the processor, or in other words, allocating the memory to them.</p>
         
         <div class="read-more-link">
             <a href="/posts/memory-management-part1/">Read More…</a>
@@ -340,7 +348,7 @@ CVE ID: CVE-2025-29625 Vulnerability Type: Buffer Overflow Impact: Remote Code E
     <article class="post">
         <div class="info">
   <h1 class="post-title">
-    <a href="/posts/fuzzer-internals-part3/">Fuzzer Internals - Part 3: Generation-Based Fuzzers (Dumb Fuzzer)</a>
+    <a href="//localhost:1313/posts/fuzzer-internals-part3/">Fuzzer Internals - Part 3: Generation-Based Fuzzers (Dumb Fuzzer)</a>
   </h1>
 
   <div class="headline">
@@ -375,8 +383,9 @@ CVE ID: CVE-2025-29625 Vulnerability Type: Buffer Overflow Impact: Remote Code E
 </div>
 
         
-        Now, I guess we are ready to make our hands dirty by writing a simple fuzzer. I start with Generation Based Fuzzers. As we discussed in Part 1, generation-based fuzzers are a kind of fuzzers that generate input from scratch. As I mentioned befre, they can be divided into two categories: smart fuzzers and dumb fuzzers. Smart fuzzers recognize the input structure, but dumb fuzzers don&rsquo;t.
-Dumb Generation-Based Fuzzers In this part, I use C++ language to create a simple dumb generation-based fuzzer but basically, the concepts are the same so you can choose your own programming language to continue the tutorial.
+        <p>Now, I guess we are ready to make our hands dirty by writing a simple fuzzer. I start with <strong>Generation Based Fuzzers</strong>. As we discussed in <a href="/posts/fuzzer-internals-part1/">Part 1</a>, generation-based fuzzers are a kind of fuzzers that generate input from scratch. As I mentioned befre, they can be divided into two categories: smart fuzzers and dumb fuzzers. Smart fuzzers recognize the input structure, but dumb fuzzers don&rsquo;t.</p>
+<h2 id="dumb-generation-based-fuzzers">Dumb Generation-Based Fuzzers</h2>
+<p>In this part, I use <strong>C++</strong> language to create a simple dumb generation-based fuzzer but basically, the concepts are the same so you can choose your own programming language to continue the tutorial.</p>
         
         <div class="read-more-link">
             <a href="/posts/fuzzer-internals-part3/">Read More…</a>
@@ -387,7 +396,7 @@ Dumb Generation-Based Fuzzers In this part, I use C++ language to create a simpl
     <article class="post">
         <div class="info">
   <h1 class="post-title">
-    <a href="/posts/fuzzer-internals-part2/">Fuzzer Internals - Part 2: Software Vulnerability Fundamentals</a>
+    <a href="//localhost:1313/posts/fuzzer-internals-part2/">Fuzzer Internals - Part 2: Software Vulnerability Fundamentals</a>
   </h1>
 
   <div class="headline">
@@ -422,8 +431,9 @@ Dumb Generation-Based Fuzzers In this part, I use C++ language to create a simpl
 </div>
 
         
-        Before getting into fuzzer internals, it’s necessary to understand the minimum concept of vulnerabilities and anything related to them. In this part, the fundamental concept is explained. I hope it will be useful for you.
-Understanding Vulnerability Analysis Vulnerability analysis is the process of identifying, assessing, and prioritizing the security weaknesses in a system. Vulnerability analysis is important for maintaining the confidentiality, integrity, and availability of the data and services that the system provides.
+        <p>Before getting into fuzzer internals, it’s necessary to understand the minimum concept of vulnerabilities and anything related to them. In this part, the fundamental concept is explained. I hope it will be useful for you.</p>
+<h2 id="understanding-vulnerability-analysis">Understanding Vulnerability Analysis</h2>
+<p>Vulnerability analysis is the process of identifying, assessing, and prioritizing the security weaknesses in a system. Vulnerability analysis is important for maintaining the confidentiality, integrity, and availability of the data and services that the system provides. It is a critical component of any comprehensive security strategy, as it allows organizations to proactively address potential threats before they can be exploited by malicious actors.</p>
         
         <div class="read-more-link">
             <a href="/posts/fuzzer-internals-part2/">Read More…</a>
@@ -434,7 +444,7 @@ Understanding Vulnerability Analysis Vulnerability analysis is the process of id
     <article class="post">
         <div class="info">
   <h1 class="post-title">
-    <a href="/posts/fuzzer-internals-part1/">Fuzzer Internals - Part 1: Introduction to Fuzzers</a>
+    <a href="//localhost:1313/posts/fuzzer-internals-part1/">Fuzzer Internals - Part 1: Introduction to Fuzzers</a>
   </h1>
 
   <div class="headline">
@@ -469,8 +479,10 @@ Understanding Vulnerability Analysis Vulnerability analysis is the process of id
 </div>
 
         
-        About this tutorial I decided to study Fuzzers and in this way, I wanna teach what I learn through my research. Let&rsquo;s get to it.
-Software Security Software security is a critical aspect of software development that focuses on safeguarding software applications from potential threats. This involves a set of practices that are integrated into the software development process to prevent unauthorized access, use, disclosure, disruption, modification, or destruction. Software security testing can be introduced at various organizations of:
+        <h2 id="about-this-tutorial">About this tutorial</h2>
+<p>I decided to study Fuzzers and in this way, I wanna teach what I learn through my research. Let&rsquo;s get to it.</p>
+<h2 id="software-security">Software Security</h2>
+<p>Software security is a critical aspect of software development that focuses on safeguarding software applications from potential threats. This involves a set of practices that are integrated into the software development process to prevent unauthorized access, use, disclosure, disruption, modification, or destruction. Software security testing can be introduced at various organizations of:</p>
         
         <div class="read-more-link">
             <a href="/posts/fuzzer-internals-part1/">Read More…</a>
